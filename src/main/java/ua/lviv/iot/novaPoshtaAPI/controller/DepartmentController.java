@@ -70,4 +70,9 @@ public class DepartmentController {
         departmentService.deleteParcel(departmentId, parcelId);
     }
 
+    @GetMapping("/{departmentIdFrom}/deliver/{departmentIdTo}/parcel/{parcelId}")
+    public void deliverParcel(@PathVariable Long departmentIdFrom, @PathVariable Long departmentIdTo, @PathVariable Long parcelId) {
+        departmentService.deliverParcel(departmentIdFrom, departmentIdTo, parcelId);
+    }
+
 }

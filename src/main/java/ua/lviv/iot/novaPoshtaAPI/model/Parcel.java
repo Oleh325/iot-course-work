@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -31,8 +32,9 @@ public class Parcel {
     }
 
     public String toCSV() {
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(dateSent);
         return parcelId + ", " + weightInKgs + ", " + heightInCm + ", "
                 + widthInCm + ", " + lengthInCm + ", " + origin + ", "
-                + destination + ", " + location + ", " + dateSent;
+                + destination + ", " + location + ", " + date;
     }
 }

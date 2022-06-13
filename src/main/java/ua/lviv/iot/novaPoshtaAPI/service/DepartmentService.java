@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import ua.lviv.iot.novaPoshtaAPI.datastorage.dal.DepartmentFileStore;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +25,8 @@ public class DepartmentService {
     ParcelService parcelService;
     @Autowired
     CourierService courierService;
+    @Autowired
+    DepartmentFileStore departmentFileStore;
 
     private HashMap<Long, Department> departments = new HashMap<>();
 
@@ -77,6 +84,10 @@ public class DepartmentService {
             Courier courier = courierService.getCourierById(courierId);
             courier.setParcelIds(newIdsCourier);
             courierService.updateCourier(courier, courierId);
+            Parcel newParcel = parcelService.getParcelById(parcelId);
+            newParcel.setLocation("Courier is delivering the parcel");
+            parcelService.deleteParcel(parcelId);
+            parcelService.addParcel(newParcel);
         }
     }
 
@@ -84,6 +95,7 @@ public class DepartmentService {
         List<Long> newIds = this.departments.get(departmentId).getParcelIds();
         newIds.add(parcel.getParcelId());
         this.departments.get(departmentId).setParcelIds(newIds);
+        parcel.setLocation(this.departments.get(departmentId).getLocation());
         parcelService.addParcel(parcel);
     }
 
@@ -114,13 +126,44 @@ public class DepartmentService {
         Parcel result = new Parcel();
         for (Parcel parcel: parcelService.getAllParcels()) {
             if (departments.get(departmentId).getParcelIds().contains(parcel.getParcelId())) {
-                if (parcel.getParcelId() == parcelId) {
+                if (Objects.equals(parcel.getParcelId(), parcelId)) {
                     result = parcel;
                 }
             }
         }
 
         return result;
+    }
+
+    public void deliverParcel(Long departmentIdFrom, Long departmentIdTo, Long parcelId) {
+        if (departments.get(departmentIdFrom).getParcelIds().contains(parcelId)) {
+            List<Long> newIdsFrom = departments.get(departmentIdFrom).getParcelIds();
+            newIdsFrom.remove(parcelId);
+            departments.get(departmentIdFrom).setParcelIds(newIdsFrom);
+            List<Long> newIdsTo = departments.get(departmentIdTo).getParcelIds();
+            newIdsTo.add(parcelId);
+            departments.get(departmentIdTo).setParcelIds(newIdsTo);
+            Parcel newParcel = parcelService.getParcelById(parcelId);
+            newParcel.setLocation(departments.get(departmentIdTo).getLocation());
+            parcelService.deleteParcel(parcelId);
+            parcelService.addParcel(newParcel);
+        }
+    }
+
+    @PreDestroy
+    private void saveDepartments() {
+        List<Department> list = this.departments.values().stream().toList();
+        departmentFileStore.saveDepartments(list);
+    }
+
+    @PostConstruct
+    private void loadDepartments() throws IOException, ParseException {
+        if (departmentFileStore.loadDepartments() != null) {
+            List<Department> list = departmentFileStore.loadDepartments();
+            for (Department department: list) {
+                this.departments.put(department.getDepartmentId(), department);
+            }
+        }
     }
 
 }

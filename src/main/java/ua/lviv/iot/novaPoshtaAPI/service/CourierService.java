@@ -2,8 +2,14 @@ package ua.lviv.iot.novaPoshtaAPI.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.lviv.iot.novaPoshtaAPI.datastorage.dal.CourierFileStore;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
+import ua.lviv.iot.novaPoshtaAPI.model.Department;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +19,8 @@ public class CourierService {
 
     @Autowired
     ParcelService parcelService;
+    @Autowired
+    CourierFileStore courierFileStore;
 
     HashMap<Long, Courier> couriers = new HashMap<>();
 
@@ -67,6 +75,22 @@ public class CourierService {
             List<Long> newIds = this.couriers.get(courierId).getParcelIds();
             newIds.remove(parcelId);
             this.couriers.get(courierId).setParcelIds(newIds);
+        }
+    }
+
+    @PreDestroy
+    private void saveCouriers() {
+        List<Courier> list = this.couriers.values().stream().toList();
+        courierFileStore.saveCouriers(list);
+    }
+
+    @PostConstruct
+    private void loadCouriers() throws IOException, ParseException {
+        if (courierFileStore.loadCouriers() != null) {
+            List<Courier> list = courierFileStore.loadCouriers();
+            for (Courier courier: list) {
+                this.couriers.put(courier.getDepartmentId(), courier);
+            }
         }
     }
 

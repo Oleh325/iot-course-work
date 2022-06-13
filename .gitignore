@@ -17,3 +17,6 @@ buildNumber.properties
  
 # Maven
 log/
+
+# .csv files
+res/
