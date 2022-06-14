@@ -34,13 +34,13 @@ public class ParcelFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("D:\\My Projects\\novaPoshtaAPI\\res\\parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("D:\\My Projects\\novaPoshtaAPI\\res\\parcel-" + year + "-" + month + "-0" + i + ".csv");
+                if (Files.exists(Paths.get("res\\parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\parcel-" + year + "-" + month + "-0" + i + ".csv");
                     resultList.addAll(ScanParcel(file));
                 }
             } else {
-                if (Files.exists(Paths.get("D:\\My Projects\\novaPoshtaAPI\\res\\parcel-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("D:\\My Projects\\novaPoshtaAPI\\res\\parcel-" + year + "-" + month + "-" + i + ".csv");
+                if (Files.exists(Paths.get("res\\parcel-" + year + "-" + month + "-" + i + ".csv"))) {
+                    file = new File("res\\parcel-" + year + "-" + month + "-" + i + ".csv");
                     resultList.addAll(ScanParcel(file));
                 }
             }
@@ -88,7 +88,7 @@ public class ParcelFileStore {
     public void saveParcels(final List<Parcel> parcels) {
         String date = Util.getTimeNow();
 
-        File file = new File("D:\\My Projects\\novaPoshtaAPI\\res\\parcel-" + date + ".csv");
+        File file = new File("res\\parcel-" + date + ".csv");
         try (FileWriter writer = new FileWriter(file);) {
             writer.write(parcels.get(0).getHeaders() + "\n");
             for (Parcel parcel: parcels) {
