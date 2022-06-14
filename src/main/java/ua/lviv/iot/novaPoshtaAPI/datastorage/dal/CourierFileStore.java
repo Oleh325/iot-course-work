@@ -23,9 +23,19 @@ public class CourierFileStore {
 
     public List<Courier> loadCouriers(boolean isTest) throws IOException, ParseException {
         List<Courier> resultList = new LinkedList<>();
+
+        File directory = new File("res");
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+
         String testPath = "";
         if (isTest) {
             testPath = "test\\";
+        }
+        directory = new File("res\\test");
+        if (!directory.exists()){
+            directory.mkdir();
         }
 
         File file;
@@ -116,9 +126,19 @@ public class CourierFileStore {
 
     public void saveCouriers(final List<Courier> couriers, boolean isTest) {
         String date = Util.getTimeNow();
+
+        File directory = new File("res");
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+
         String testPath = "";
         if (isTest) {
             testPath = "test\\";
+        }
+        directory = new File("res\\test");
+        if (!directory.exists()){
+            directory.mkdir();
         }
 
         File file = new File("res\\" + testPath + "courier-" + date + ".csv");

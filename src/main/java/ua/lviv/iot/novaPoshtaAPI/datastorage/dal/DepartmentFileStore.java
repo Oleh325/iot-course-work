@@ -23,9 +23,19 @@ public class DepartmentFileStore {
 
     public List<Department> loadDepartments(boolean isTest) throws IOException, ParseException {
         List<Department> resultList = new LinkedList<>();
+
+        File directory = new File("res");
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+
         String testPath = "";
         if (isTest) {
             testPath = "test\\";
+        }
+        directory = new File("res\\test");
+        if (!directory.exists()){
+            directory.mkdir();
         }
 
         File file;
@@ -115,9 +125,19 @@ public class DepartmentFileStore {
 
     public void saveDepartments(final List<Department> departments, boolean isTest) {
         String date = Util.getTimeNow();
+
+        File directory = new File("res");
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+
         String testPath = "";
         if (isTest) {
             testPath = "test\\";
+        }
+        directory = new File("res\\test");
+        if (!directory.exists()){
+            directory.mkdir();
         }
 
         File file = new File("res\\" + testPath + "department-" + date + ".csv");
