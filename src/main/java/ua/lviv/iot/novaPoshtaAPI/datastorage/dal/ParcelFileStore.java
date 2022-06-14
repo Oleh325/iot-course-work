@@ -18,8 +18,12 @@ import java.util.*;
 @Component
 public class ParcelFileStore {
 
-    public List<Parcel> loadParcels() throws IOException, ParseException {
+    public List<Parcel> loadParcels(boolean isTest) throws IOException, ParseException {
         List<Parcel> resultList = new LinkedList<>();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
         File file;
 
@@ -34,13 +38,13 @@ public class ParcelFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("res\\parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\parcel-" + year + "-" + month + "-0" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv");
                     resultList.addAll(ScanParcel(file));
                 }
             } else {
-                if (Files.exists(Paths.get("res\\parcel-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\parcel-" + year + "-" + month + "-" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv");
                     resultList.addAll(ScanParcel(file));
                 }
             }
@@ -85,10 +89,15 @@ public class ParcelFileStore {
         return parcel;
     }
 
-    public void saveParcels(final List<Parcel> parcels) {
+    public void saveParcels(final List<Parcel> parcels, boolean isTest) {
         String date = Util.getTimeNow();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
-        File file = new File("res\\parcel-" + date + ".csv");
+
+        File file = new File("res\\" + testPath + "parcel-" + date + ".csv");
         try (FileWriter writer = new FileWriter(file);) {
             writer.write(parcels.get(0).getHeaders() + "\n");
             for (Parcel parcel: parcels) {

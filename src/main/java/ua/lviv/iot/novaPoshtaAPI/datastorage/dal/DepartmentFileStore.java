@@ -21,8 +21,12 @@ import java.util.stream.Collectors;
 @Component
 public class DepartmentFileStore {
 
-    public List<Department> loadDepartments() throws IOException, ParseException {
+    public List<Department> loadDepartments(boolean isTest) throws IOException, ParseException {
         List<Department> resultList = new LinkedList<>();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
         File file;
 
@@ -37,13 +41,13 @@ public class DepartmentFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("res\\department-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\department-" + year + "-" + month + "-0" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-" + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "department-" + year + "-" + month + "-0" + i + ".csv");
                     resultList.addAll(ScanDepartment(file));
                 }
             } else {
-                if (Files.exists(Paths.get("res\\department-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\department-" + year + "-" + month + "-" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-" + month + "-" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "department-" + year + "-" + month + "-" + i + ".csv");
                     resultList.addAll(ScanDepartment(file));
                 }
             }
@@ -109,10 +113,14 @@ public class DepartmentFileStore {
         return department;
     }
 
-    public void saveDepartments(final List<Department> departments) {
+    public void saveDepartments(final List<Department> departments, boolean isTest) {
         String date = Util.getTimeNow();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
-        File file = new File("res\\department-" + date + ".csv");
+        File file = new File("res\\" + testPath + "department-" + date + ".csv");
         try (FileWriter writer = new FileWriter(file);) {
             writer.write(departments.get(0).getHeaders() + "\n");
             for (Department department: departments) {

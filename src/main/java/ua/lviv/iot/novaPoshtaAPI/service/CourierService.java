@@ -81,13 +81,13 @@ public class CourierService {
     @PreDestroy
     private void saveCouriers() {
         List<Courier> list = this.couriers.values().stream().toList();
-        courierFileStore.saveCouriers(list);
+        courierFileStore.saveCouriers(list, false);
     }
 
     @PostConstruct
     private void loadCouriers() throws IOException, ParseException {
-        if (courierFileStore.loadCouriers() != null) {
-            List<Courier> list = courierFileStore.loadCouriers();
+        if (courierFileStore.loadCouriers(false) != null) {
+            List<Courier> list = courierFileStore.loadCouriers(false);
             for (Courier courier: list) {
                 this.couriers.put(courier.getDepartmentId(), courier);
             }

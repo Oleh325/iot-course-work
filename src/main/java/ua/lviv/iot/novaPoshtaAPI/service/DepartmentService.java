@@ -153,13 +153,13 @@ public class DepartmentService {
     @PreDestroy
     private void saveDepartments() {
         List<Department> list = this.departments.values().stream().toList();
-        departmentFileStore.saveDepartments(list);
+        departmentFileStore.saveDepartments(list, false);
     }
 
     @PostConstruct
     private void loadDepartments() throws IOException, ParseException {
-        if (departmentFileStore.loadDepartments() != null) {
-            List<Department> list = departmentFileStore.loadDepartments();
+        if (departmentFileStore.loadDepartments(false) != null) {
+            List<Department> list = departmentFileStore.loadDepartments(false);
             for (Department department: list) {
                 this.departments.put(department.getDepartmentId(), department);
             }

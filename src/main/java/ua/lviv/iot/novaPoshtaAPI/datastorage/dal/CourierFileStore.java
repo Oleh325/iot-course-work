@@ -21,8 +21,12 @@ import java.util.stream.Collectors;
 @Component
 public class CourierFileStore {
 
-    public List<Courier> loadCouriers() throws IOException, ParseException {
+    public List<Courier> loadCouriers(boolean isTest) throws IOException, ParseException {
         List<Courier> resultList = new LinkedList<>();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
         File file;
 
@@ -37,13 +41,13 @@ public class CourierFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("res\\courier-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\courier-" + year + "-" + month + "-0" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-" + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "courier-" + year + "-" + month + "-0" + i + ".csv");
                     resultList.addAll(ScanCourier(file));
                 }
             } else {
-                if (Files.exists(Paths.get("res\\courier-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\courier-" + year + "-" + month + "-" + i + ".csv");
+                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-" + month + "-" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "courier-" + year + "-" + month + "-" + i + ".csv");
                     resultList.addAll(ScanCourier(file));
                 }
             }
@@ -110,10 +114,14 @@ public class CourierFileStore {
         return courier;
     }
 
-    public void saveCouriers(final List<Courier> couriers) {
+    public void saveCouriers(final List<Courier> couriers, boolean isTest) {
         String date = Util.getTimeNow();
+        String testPath = "";
+        if (isTest) {
+            testPath = "test\\";
+        }
 
-        File file = new File("res\\courier-" + date + ".csv");
+        File file = new File("res\\" + testPath + "courier-" + date + ".csv");
         try (FileWriter writer = new FileWriter(file);) {
             writer.write(couriers.get(0).getHeaders() + "\n");
             for (Courier courier: couriers) {

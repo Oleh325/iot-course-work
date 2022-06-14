@@ -84,13 +84,13 @@ public class ParcelService {
     @PreDestroy
     private void saveParcels() {
         List<Parcel> list = this.parcels.values().stream().toList();
-        parcelFileStore.saveParcels(list);
+        parcelFileStore.saveParcels(list, false);
     }
 
     @PostConstruct
     private void loadParcels() throws IOException, ParseException {
-        if (parcelFileStore.loadParcels() != null) {
-            List<Parcel> list = parcelFileStore.loadParcels();
+        if (parcelFileStore.loadParcels(false) != null) {
+            List<Parcel> list = parcelFileStore.loadParcels(false);
             for (Parcel parcel: list) {
                 this.parcels.put(parcel.getParcelId(), parcel);
             }
