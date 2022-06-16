@@ -1,8 +1,9 @@
 # Course Work
 ## Nova Poshta API
 ### Task description:
+\
 **Create an API that allows you to receive and pass information about offices, parcels that are sent between offices and delivered by couriers, information about the parcels themselves** \
-Those key points should be followed: \
+Those key points should be followed:
 1. Draw a diagram of the classes that will be used to complete the course work and indicate the relationships between them
 2. Write the appropriate classes using the lombok library to reduce the amount of code
 3. Implement REST services for all entities using Spring Boot. It is necessary to implement operations: GET/POST/PUT/DELETE. Operation GET/2 returns the entity with id equal to 2. Operation /GET - returns all entities that are present in the system
