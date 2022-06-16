@@ -5,7 +5,9 @@ import ua.lviv.iot.novaPoshtaAPI.Util;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.Writer;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -25,7 +27,7 @@ public class CourierFileStore {
         List<Courier> resultList = new LinkedList<>();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -34,7 +36,7 @@ public class CourierFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -51,14 +53,18 @@ public class CourierFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "courier-" + year + "-" + month + "-0" + i + ".csv");
-                    resultList.addAll(ScanCourier(file));
+                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-"
+                        + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "courier-" + year + "-"
+                            + month + "-0" + i + ".csv");
+                    resultList.addAll(scanCourier(file));
                 }
             } else {
-                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "courier-" + year + "-" + month + "-" + i + ".csv");
-                    resultList.addAll(ScanCourier(file));
+                if (Files.exists(Paths.get("res\\" + testPath + "courier-" + year + "-"
+                        + month + "-" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "courier-" + year + "-"
+                            + month + "-" + i + ".csv");
+                    resultList.addAll(scanCourier(file));
                 }
             }
         }
@@ -66,7 +72,7 @@ public class CourierFileStore {
         return resultList;
     }
 
-    private List<Courier> ScanCourier(File file) throws ParseException, IOException {
+    private List<Courier> scanCourier(File file) throws ParseException, IOException {
         List<Courier> resultCouriers = new LinkedList<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
@@ -76,7 +82,7 @@ public class CourierFileStore {
                 List<String> values = new LinkedList<>();
                 boolean isList = false;
                 String listValue = "";
-                for (String value: rawValues) {
+                for (String value : rawValues) {
                     if (value.contains("[")) {
                         isList = true;
                         for (int i = 1; i < value.length(); i++) {
@@ -99,7 +105,7 @@ public class CourierFileStore {
                         values.add(value);
                     }
                 }
-                resultCouriers.add(FillCourier(values));
+                resultCouriers.add(fillCourier(values));
             } else {
                 scanner.nextLine();
                 isFirst = false;
@@ -108,16 +114,17 @@ public class CourierFileStore {
         return resultCouriers;
     }
 
-    private Courier FillCourier(List<String> values) throws ParseException {
+    private Courier fillCourier(List<String> values) throws ParseException {
         Courier courier = new Courier();
         int index = 0;
-        for (String value: values) {
+        for (String value : values) {
             switch (index) {
                 case 0 -> courier.setCourierId(Long.parseLong(value));
                 case 1 -> courier.setDepartmentId(Long.parseLong(value));
                 case 2 -> courier.setFullName(value);
                 case 3 -> courier.setWorking(Boolean.parseBoolean(value));
-                case 4 -> courier.setParcelIds(Arrays.stream(value.split(", ")).map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
+                case 4 -> courier.setParcelIds(Arrays.stream(value.split(", "))
+                        .map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
             }
             index++;
         }
@@ -128,7 +135,7 @@ public class CourierFileStore {
         String date = Util.getTimeNow();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -137,14 +144,14 @@ public class CourierFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
         File file = new File("res\\" + testPath + "courier-" + date + ".csv");
-        try (FileWriter writer = new FileWriter(file);) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);) {
             writer.write(couriers.get(0).getHeaders() + "\n");
-            for (Courier courier: couriers) {
+            for (Courier courier : couriers) {
                 writer.write(courier.toCSV() + "\n");
             }
         } catch (IOException e) {

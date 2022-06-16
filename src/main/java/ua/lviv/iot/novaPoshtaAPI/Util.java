@@ -22,5 +22,4 @@ public class Util {
 
         return year + "-" + month + "-" + day;
     }
-    
 }

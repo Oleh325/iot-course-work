@@ -21,8 +21,8 @@ public class Courier {
     private List<Long> parcelIds;
 
     public String getHeaders() {
-        return "courierId, departmentId, fullName, " +
-                "isWorking, parcelIds";
+        return "courierId, departmentId, fullName, "
+                + "isWorking, parcelIds";
     }
 
     public String toCSV() {

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.lviv.iot.novaPoshtaAPI.datastorage.dal.CourierFileStore;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
-import ua.lviv.iot.novaPoshtaAPI.model.Department;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

@@ -5,7 +5,9 @@ import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import ua.lviv.iot.novaPoshtaAPI.Util;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.Writer;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,7 +15,10 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 @Component
 public class ParcelFileStore {
@@ -22,7 +27,7 @@ public class ParcelFileStore {
         List<Parcel> resultList = new LinkedList<>();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -31,7 +36,7 @@ public class ParcelFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -50,12 +55,12 @@ public class ParcelFileStore {
             if (i < 10) {
                 if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
                     file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv");
-                    resultList.addAll(ScanParcel(file));
+                    resultList.addAll(scanParcel(file));
                 }
             } else {
                 if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv"))) {
                     file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv");
-                    resultList.addAll(ScanParcel(file));
+                    resultList.addAll(scanParcel(file));
                 }
             }
         }
@@ -63,14 +68,14 @@ public class ParcelFileStore {
         return resultList;
     }
 
-    private List<Parcel> ScanParcel(File file) throws ParseException, IOException {
+    private List<Parcel> scanParcel(File file) throws ParseException, IOException {
         List<Parcel> resultParcels = new LinkedList<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
         while (scanner.hasNextLine()) {
             if (!isFirst) {
                 List<String> values = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                resultParcels.add(FillParcel(values));
+                resultParcels.add(fillParcel(values));
             } else {
                 scanner.nextLine();
                 isFirst = false;
@@ -79,10 +84,10 @@ public class ParcelFileStore {
         return resultParcels;
     }
 
-    private Parcel FillParcel(List<String> values) throws ParseException {
+    private Parcel fillParcel(List<String> values) throws ParseException {
         Parcel parcel = new Parcel();
         int index = 0;
-        for (String value: values) {
+        for (String value : values) {
             switch (index) {
                 case 0 -> parcel.setParcelId(Long.parseLong(value));
                 case 1 -> parcel.setWeightInKgs(Float.parseFloat(value));
@@ -103,7 +108,7 @@ public class ParcelFileStore {
         String date = Util.getTimeNow();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -112,15 +117,15 @@ public class ParcelFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
 
         File file = new File("res\\" + testPath + "parcel-" + date + ".csv");
-        try (FileWriter writer = new FileWriter(file);) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);) {
             writer.write(parcels.get(0).getHeaders() + "\n");
-            for (Parcel parcel: parcels) {
+            for (Parcel parcel : parcels) {
                 writer.write(parcel.toCSV() + "\n");
             }
         } catch (IOException e) {

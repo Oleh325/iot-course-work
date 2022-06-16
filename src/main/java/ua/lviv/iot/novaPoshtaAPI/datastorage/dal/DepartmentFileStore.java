@@ -5,7 +5,9 @@ import ua.lviv.iot.novaPoshtaAPI.model.Department;
 import ua.lviv.iot.novaPoshtaAPI.Util;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.Writer;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -25,7 +27,7 @@ public class DepartmentFileStore {
         List<Department> resultList = new LinkedList<>();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -34,7 +36,7 @@ public class DepartmentFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -51,14 +53,18 @@ public class DepartmentFileStore {
 
         for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
             if (i < 10) {
-                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "department-" + year + "-" + month + "-0" + i + ".csv");
-                    resultList.addAll(ScanDepartment(file));
+                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-"
+                        + month + "-0" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "department-" + year + "-"
+                            + month + "-0" + i + ".csv");
+                    resultList.addAll(scanDepartment(file));
                 }
             } else {
-                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "department-" + year + "-" + month + "-" + i + ".csv");
-                    resultList.addAll(ScanDepartment(file));
+                if (Files.exists(Paths.get("res\\" + testPath + "department-" + year + "-"
+                        + month + "-" + i + ".csv"))) {
+                    file = new File("res\\" + testPath + "department-" + year + "-"
+                            + month + "-" + i + ".csv");
+                    resultList.addAll(scanDepartment(file));
                 }
             }
         }
@@ -66,7 +72,7 @@ public class DepartmentFileStore {
         return resultList;
     }
 
-    private List<Department> ScanDepartment(File file) throws ParseException, IOException {
+    private List<Department> scanDepartment(File file) throws ParseException, IOException {
         List<Department> resultDepartments = new LinkedList<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
@@ -76,7 +82,7 @@ public class DepartmentFileStore {
                 List<String> values = new LinkedList<>();
                 boolean isList = false;
                 String listValue = "";
-                for (String value: rawValues) {
+                for (String value : rawValues) {
                     if (value.contains("[")) {
                         isList = true;
                         for (int i = 1; i < value.length(); i++) {
@@ -99,7 +105,7 @@ public class DepartmentFileStore {
                         values.add(value);
                     }
                 }
-                resultDepartments.add(FillDepartment(values));
+                resultDepartments.add(fillDepartment(values));
             } else {
                 scanner.nextLine();
                 isFirst = false;
@@ -108,15 +114,16 @@ public class DepartmentFileStore {
         return resultDepartments;
     }
 
-    private Department FillDepartment(List<String> values) throws ParseException {
+    private Department fillDepartment(List<String> values) throws ParseException {
         Department department = new Department();
         int index = 0;
-        for (String value: values) {
+        for (String value : values) {
             switch (index) {
                 case 0 -> department.setDepartmentId(Long.parseLong(value));
                 case 1 -> department.setLocation(value);
                 case 2 -> department.setWorkingHours(value);
-                case 3 -> department.setParcelIds(Arrays.stream(value.split(", ")).map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
+                case 3 -> department.setParcelIds(Arrays.stream(value.split(", "))
+                        .map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
             }
             index++;
         }
@@ -127,7 +134,7 @@ public class DepartmentFileStore {
         String date = Util.getTimeNow();
 
         File directory = new File("res");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
@@ -136,14 +143,14 @@ public class DepartmentFileStore {
             testPath = "test\\";
         }
         directory = new File("res\\test");
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
         File file = new File("res\\" + testPath + "department-" + date + ".csv");
-        try (FileWriter writer = new FileWriter(file);) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);) {
             writer.write(departments.get(0).getHeaders() + "\n");
-            for (Department department: departments) {
+            for (Department department : departments) {
                 writer.write(department.toCSV() + "\n");
             }
         } catch (IOException e) {

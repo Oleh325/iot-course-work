@@ -2,8 +2,6 @@ package ua.lviv.iot.novaPoshtaAPI.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import ua.lviv.iot.novaPoshtaAPI.datastorage.dal.DepartmentFileStore;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
@@ -74,8 +72,8 @@ public class DepartmentService {
     }
 
     public void giveParcelToCourier(Long departmentId, Long courierId, Long parcelId) {
-        if (departments.get(departmentId).getParcelIds().contains(parcelId) &&
-                Objects.equals(courierService.getCourierById(courierId).getDepartmentId(), departmentId)) {
+        if (departments.get(departmentId).getParcelIds().contains(parcelId)
+                && Objects.equals(courierService.getCourierById(courierId).getDepartmentId(), departmentId)) {
             List<Long> newIdsDpt = departments.get(departmentId).getParcelIds();
             newIdsDpt.remove(parcelId);
             departments.get(departmentId).setParcelIds(newIdsDpt);

@@ -26,9 +26,9 @@ public class Parcel {
     private Date dateSent;
 
     public String getHeaders() {
-        return "parcelId, weightInKgs, heightInCm, " +
-                "widthInCm, lengthInCm, origin, " +
-                "destination, location, dateSent";
+        return "parcelId, weightInKgs, heightInCm, "
+                + "widthInCm, lengthInCm, origin, "
+                + "destination, location, dateSent";
     }
 
     public String toCSV() {

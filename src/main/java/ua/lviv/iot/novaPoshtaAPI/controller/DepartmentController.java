@@ -1,7 +1,14 @@
 package ua.lviv.iot.novaPoshtaAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
@@ -41,7 +48,8 @@ public class DepartmentController {
     }
 
     @GetMapping("/{departmentId}/couriers/{courierId}/parcels/{parcelId}")
-    public void giveParcelToCourier(@PathVariable Long departmentId, @PathVariable Long courierId, @PathVariable Long parcelId) {
+    public void giveParcelToCourier(@PathVariable Long departmentId, @PathVariable Long courierId,
+                                    @PathVariable Long parcelId) {
         departmentService.giveParcelToCourier(departmentId, courierId, parcelId);
     }
 
@@ -71,7 +79,8 @@ public class DepartmentController {
     }
 
     @GetMapping("/{departmentIdFrom}/deliver/{departmentIdTo}/parcel/{parcelId}")
-    public void deliverParcel(@PathVariable Long departmentIdFrom, @PathVariable Long departmentIdTo, @PathVariable Long parcelId) {
+    public void deliverParcel(@PathVariable Long departmentIdFrom, @PathVariable Long departmentIdTo,
+                              @PathVariable Long parcelId) {
         departmentService.deliverParcel(departmentIdFrom, departmentIdTo, parcelId);
     }
 
