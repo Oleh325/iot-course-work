@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class CourierFileStore {
 
-    public List<Courier> loadCouriers(boolean isTest) throws IOException, ParseException {
+    public List<Courier> loadCouriers(boolean isTest) throws IOException {
         List<Courier> resultList = new LinkedList<>();
 
         File directory = new File("res");
@@ -72,7 +71,7 @@ public class CourierFileStore {
         return resultList;
     }
 
-    private List<Courier> scanCourier(File file) throws ParseException, IOException {
+    private List<Courier> scanCourier(File file) throws IOException {
         List<Courier> resultCouriers = new LinkedList<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
@@ -114,7 +113,7 @@ public class CourierFileStore {
         return resultCouriers;
     }
 
-    private Courier fillCourier(List<String> values) throws ParseException {
+    private Courier fillCourier(List<String> values) {
         Courier courier = new Courier();
         int index = 0;
         for (String value : values) {

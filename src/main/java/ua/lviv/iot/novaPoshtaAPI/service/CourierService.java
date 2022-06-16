@@ -31,7 +31,18 @@ public class CourierService {
         return couriers.get(courierId);
     }
 
+    public void deliverParcel(Long courierId, Long parcelId) {
+        if (this.couriers.get(courierId).getParcelIds().contains(parcelId)) {
+            parcelService.deleteParcel(parcelId);
+            List<Long> newIds = this.couriers.get(courierId).getParcelIds();
+            newIds.remove(parcelId);
+            this.couriers.get(courierId).setParcelIds(newIds);
+        }
+    }
+
     public void addCourier(Courier courier) {
+        List<Long> parcelIds = new LinkedList<>();
+        courier.setParcelIds(parcelIds);
         couriers.put(courier.getCourierId(), courier);
     }
 
@@ -42,6 +53,7 @@ public class CourierService {
         this.couriers.remove(courierId);
 
         newCourier.setCourierId(oldCourier.getCourierId());
+        newCourier.setParcelIds(oldCourier.getParcelIds());
 
         if (courier.getDepartmentId() != null) {
             newCourier.setDepartmentId(courier.getDepartmentId());
@@ -53,11 +65,6 @@ public class CourierService {
         } else {
             newCourier.setFullName(oldCourier.getFullName());
         }
-        if (courier.getParcelIds() != null) {
-            newCourier.setParcelIds(courier.getParcelIds());
-        } else {
-            newCourier.setParcelIds(oldCourier.getParcelIds());
-        }
 
         newCourier.setWorking(newCourier.getParcelIds() != null);
 
@@ -65,16 +72,10 @@ public class CourierService {
     }
 
     public void deleteCourier(Long courierId) {
-        this.couriers.remove(courierId);
-    }
-
-    public void deliverParcel(Long courierId, Long parcelId) {
-        if (this.couriers.get(courierId).getParcelIds().contains(parcelId)) {
+        for (Long parcelId: this.couriers.get(courierId).getParcelIds()) {
             parcelService.deleteParcel(parcelId);
-            List<Long> newIds = this.couriers.get(courierId).getParcelIds();
-            newIds.remove(parcelId);
-            this.couriers.get(courierId).setParcelIds(newIds);
         }
+        this.couriers.remove(courierId);
     }
 
     @PreDestroy

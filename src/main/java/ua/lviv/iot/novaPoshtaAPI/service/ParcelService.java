@@ -33,11 +33,11 @@ public class ParcelService {
         parcels.put(parcel.getParcelId(), parcel);
     }
 
-    public void updateParcel(Parcel parcel) {
-        Parcel oldParcel = this.parcels.get(parcel.getParcelId());
+    public void updateParcel(Parcel parcel, Long parcelId) {
+        Parcel oldParcel = this.parcels.get(parcelId);
         Parcel newParcel = new Parcel();
 
-        this.parcels.remove(parcel.getParcelId());
+        this.parcels.remove(parcelId);
 
         newParcel.setParcelId(oldParcel.getParcelId());
         newParcel.setOrigin(oldParcel.getOrigin());

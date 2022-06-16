@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class DepartmentFileStore {
 
-    public List<Department> loadDepartments(boolean isTest) throws IOException, ParseException {
+    public List<Department> loadDepartments(boolean isTest) throws IOException {
         List<Department> resultList = new LinkedList<>();
 
         File directory = new File("res");
@@ -72,7 +71,7 @@ public class DepartmentFileStore {
         return resultList;
     }
 
-    private List<Department> scanDepartment(File file) throws ParseException, IOException {
+    private List<Department> scanDepartment(File file) throws IOException {
         List<Department> resultDepartments = new LinkedList<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
@@ -114,7 +113,7 @@ public class DepartmentFileStore {
         return resultDepartments;
     }
 
-    private Department fillDepartment(List<String> values) throws ParseException {
+    private Department fillDepartment(List<String> values) {
         Department department = new Department();
         int index = 0;
         for (String value : values) {

@@ -37,6 +37,8 @@ public class DepartmentService {
     }
 
     public void addDepartment(Department department) {
+        List<Long> parcelIds = new LinkedList<>();
+        department.setParcelIds(parcelIds);
         this.departments.put(department.getDepartmentId(), department);
     }
 
@@ -47,6 +49,7 @@ public class DepartmentService {
         this.departments.remove(departmentId);
 
         newDpt.setDepartmentId(oldDpt.getDepartmentId());
+        newDpt.setParcelIds(oldDpt.getParcelIds());
 
         if (department.getLocation() != null) {
             newDpt.setLocation(department.getLocation());
@@ -58,16 +61,14 @@ public class DepartmentService {
         } else {
             newDpt.setWorkingHours(oldDpt.getWorkingHours());
         }
-        if (department.getParcelIds() != null) {
-            newDpt.setParcelIds(department.getParcelIds());
-        } else {
-            newDpt.setParcelIds(oldDpt.getParcelIds());
-        }
 
         this.departments.put(newDpt.getDepartmentId(), newDpt);
     }
 
     public void deleteDepartment(Long departmentId) {
+        for (Long parcelId: this.departments.get(departmentId).getParcelIds()) {
+            parcelService.deleteParcel(parcelId);
+        }
         this.departments.remove(departmentId);
     }
 
@@ -97,9 +98,9 @@ public class DepartmentService {
         parcelService.addParcel(parcel);
     }
 
-    public void updateParcel(Long departmentId, Parcel parcel) {
+    public void updateParcel(Long departmentId, Parcel parcel, Long parcelId) {
         if (this.departments.get(departmentId).getParcelIds().contains(parcel.getParcelId())) {
-            parcelService.updateParcel(parcel);
+            parcelService.updateParcel(parcel, parcelId);
         }
     }
 
@@ -146,6 +147,22 @@ public class DepartmentService {
             parcelService.deleteParcel(parcelId);
             parcelService.addParcel(newParcel);
         }
+    }
+
+    public void addCourier(Courier courier) {
+        if (this.departments.get(courier.getDepartmentId()) != null) {
+            courierService.addCourier(courier);
+        }
+    }
+
+    public void updateCourier(Courier courier, Long courierId) {
+        if (this.departments.get(courier.getDepartmentId()) != null) {
+            courierService.updateCourier(courier, courierId);
+        }
+    }
+
+    public void deleteCourier(Long courierId) {
+        courierService.deleteCourier(courierId);
     }
 
     @PreDestroy
