@@ -13,10 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -82,7 +79,21 @@ public class CourierFileStore {
                 boolean isList = false;
                 String listValue = "";
                 for (String value : rawValues) {
-                    if (value.contains("[")) {
+                    if (value.equals("null")) {
+                        values.add("");
+                    } else if (value.contains("[") && value.contains("]")) {
+                        if (value.equals("[]")) {
+                            values.add("");
+                        } else {
+                            int i = 1;
+                            while (value.charAt(i) != ']') {
+                                listValue += value.charAt(i);
+                                i++;
+                            }
+                            values.add(listValue);
+                            isList = false;
+                        }
+                    } else if (value.contains("[")) {
                         isList = true;
                         for (int i = 1; i < value.length(); i++) {
                             listValue += value.charAt(i);
@@ -105,6 +116,7 @@ public class CourierFileStore {
                     }
                 }
                 resultCouriers.add(fillCourier(values));
+                listValue = "";
             } else {
                 scanner.nextLine();
                 isFirst = false;
@@ -122,8 +134,15 @@ public class CourierFileStore {
                 case 1 -> courier.setDepartmentId(Long.parseLong(value));
                 case 2 -> courier.setFullName(value);
                 case 3 -> courier.setWorking(Boolean.parseBoolean(value));
-                case 4 -> courier.setParcelIds(Arrays.stream(value.split(", "))
-                        .map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
+                case 4 -> {
+                    if (!Objects.equals(value, "")) {
+                        courier.setParcelIds(Arrays.stream(value.split(", "))
+                                .map(s -> Long.parseLong(s.trim())).collect(Collectors.toList()));
+                    } else {
+                        List<Long> ids = new LinkedList<>();
+                        courier.setParcelIds(ids);
+                    }
+                }
             }
             index++;
         }

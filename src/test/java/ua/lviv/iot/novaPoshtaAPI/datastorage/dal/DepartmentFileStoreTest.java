@@ -62,7 +62,7 @@ class DepartmentFileStoreTest {
                 "Department(departmentId=2, location=Short street 7 (Lviv), " +
                 "workingHours=09:00-19:00, parcelIds=[4, 5]), " +
                 "Department(departmentId=3, location=Horodots'ka street 69 (Lviv), " +
-                "workingHours=06:00-21:00, parcelIds=null), " +
+                "workingHours=06:00-21:00, parcelIds=[6]), " +
                 "Department(departmentId=4, location=Svobody avenue 8 (Rivne), " +
                 "workingHours=07:00-21:00, parcelIds=[7, 8, 9]), " +
                 "Department(departmentId=5, location=Lvivs'ka street 12 (Kryvyi Rih), " +

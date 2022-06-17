@@ -61,7 +61,7 @@ class CourierFileStoreTest {
                 "Courier(courierId=2, departmentId=1, fullName=Veres Zenovii, " +
                 "isWorking=false, parcelIds=[4, 5]), " +
                 "Courier(courierId=3, departmentId=1, fullName=Pavlyk Vadym, " +
-                "isWorking=false, parcelIds=null), " +
+                "isWorking=false, parcelIds=[6]), " +
                 "Courier(courierId=4, departmentId=2, fullName=Shvets' Yulia, " +
                 "isWorking=true, parcelIds=[7, 8, 9]), " +
                 "Courier(courierId=5, departmentId=2, fullName=Mel'nyk Roman, " +
