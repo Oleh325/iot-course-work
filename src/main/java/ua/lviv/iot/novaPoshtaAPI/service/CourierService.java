@@ -8,7 +8,6 @@ import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +16,9 @@ import java.util.List;
 public class CourierService {
 
     @Autowired
-    ParcelService parcelService;
+    private ParcelService parcelService;
     @Autowired
-    CourierFileStore courierFileStore;
+    private CourierFileStore courierFileStore;
 
     HashMap<Long, Courier> couriers = new HashMap<>();
 
@@ -47,28 +46,7 @@ public class CourierService {
     }
 
     public void updateCourier(Courier courier, Long courierId) {
-        Courier oldCourier = this.couriers.get(courierId);
-        Courier newCourier = new Courier();
-
-        this.couriers.remove(courierId);
-
-        newCourier.setCourierId(oldCourier.getCourierId());
-        newCourier.setParcelIds(oldCourier.getParcelIds());
-
-        if (courier.getDepartmentId() != null) {
-            newCourier.setDepartmentId(courier.getDepartmentId());
-        } else {
-            newCourier.setDepartmentId(oldCourier.getDepartmentId());
-        }
-        if (courier.getFullName() != null) {
-            newCourier.setFullName(courier.getFullName());
-        } else {
-            newCourier.setFullName(oldCourier.getFullName());
-        }
-
-        newCourier.setWorking(newCourier.getParcelIds() != null);
-
-        this.couriers.put(newCourier.getCourierId(), newCourier);
+        this.couriers.put(courierId, courier);
     }
 
     public void deleteCourier(Long courierId) {
@@ -79,18 +57,14 @@ public class CourierService {
     }
 
     @PreDestroy
-    private void saveCouriers() {
-        List<Courier> list = this.couriers.values().stream().toList();
-        courierFileStore.saveCouriers(list, false);
+    private void saveCouriers() throws IOException {
+        courierFileStore.saveCouriers(this.couriers, "res\\");
     }
 
     @PostConstruct
-    private void loadCouriers() throws IOException, ParseException {
-        if (courierFileStore.loadCouriers(false) != null) {
-            List<Courier> list = courierFileStore.loadCouriers(false);
-            for (Courier courier: list) {
-                this.couriers.put(courier.getDepartmentId(), courier);
-            }
+    private void loadCouriers() throws IOException {
+        if (courierFileStore.loadCouriers("res\\") != null) {
+            this.couriers = courierFileStore.loadCouriers("res\\");
         }
     }
 

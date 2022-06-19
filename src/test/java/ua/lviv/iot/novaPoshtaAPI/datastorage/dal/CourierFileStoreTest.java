@@ -1,23 +1,22 @@
 package ua.lviv.iot.novaPoshtaAPI.datastorage.dal;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CourierFileStoreTest {
 
-    List<Courier> list = new LinkedList<>();
+    HashMap<Long, Courier> map = new HashMap<>();
     CourierFileStore courierFileStore = new CourierFileStore();
 
     @BeforeEach
-    void setUp() throws ParseException {
+    void setUp() {
         List<Long> parcelIds1 = new LinkedList<>();
         parcelIds1.add(1L);
         parcelIds1.add(2L);
@@ -45,17 +44,17 @@ class CourierFileStoreTest {
                 true, parcelIds5);
 
 
-        list.add(courier1);
-        list.add(courier2);
-        list.add(courier3);
-        list.add(courier4);
-        list.add(courier5);
+        map.put(courier1.getCourierId(), courier1);
+        map.put(courier2.getCourierId(), courier2);
+        map.put(courier3.getCourierId(), courier3);
+        map.put(courier4.getCourierId(), courier4);
+        map.put(courier5.getCourierId(), courier5);
     }
 
     @Test
-    void SaveAndLoadCouriers() throws IOException, ParseException {
-        courierFileStore.saveCouriers(list, true);
-        List<Courier> resultList = courierFileStore.loadCouriers(true);
+    void SaveAndLoadCouriers() throws IOException {
+        courierFileStore.saveCouriers(map, "res\\test\\");
+        HashMap<Long, Courier> resultMap = courierFileStore.loadCouriers("res\\test\\");
         String expected = "[Courier(courierId=1, departmentId=1, fullName=Pavelchak Andrii, " +
                 "isWorking=false, parcelIds=[1, 2, 3]), " +
                 "Courier(courierId=2, departmentId=1, fullName=Veres Zenovii, " +
@@ -66,6 +65,6 @@ class CourierFileStoreTest {
                 "isWorking=true, parcelIds=[7, 8, 9]), " +
                 "Courier(courierId=5, departmentId=2, fullName=Mel'nyk Roman, " +
                 "isWorking=true, parcelIds=[10, 11])]";
-        assertEquals(expected, resultList.toString());
+        Assertions.assertEquals(expected, resultMap.values().stream().toList().toString());
     }
 }

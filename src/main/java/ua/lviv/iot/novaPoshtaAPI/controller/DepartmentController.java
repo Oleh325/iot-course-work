@@ -21,10 +21,10 @@ import java.util.List;
 public class DepartmentController {
 
     @Autowired
-    DepartmentService departmentService;
+    private DepartmentService departmentService;
 
     @GetMapping
-    private List<Department> getAllDepartments() {
+    public List<Department> getAllDepartments() {
         return departmentService.getAllDepartments();
     }
 

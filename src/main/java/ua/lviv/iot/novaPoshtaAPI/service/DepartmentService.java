@@ -10,7 +10,6 @@ import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,11 +19,11 @@ import java.util.Objects;
 public class DepartmentService {
 
     @Autowired
-    ParcelService parcelService;
+    private ParcelService parcelService;
     @Autowired
-    CourierService courierService;
+    private CourierService courierService;
     @Autowired
-    DepartmentFileStore departmentFileStore;
+    private DepartmentFileStore departmentFileStore;
 
     private HashMap<Long, Department> departments = new HashMap<>();
 
@@ -43,26 +42,7 @@ public class DepartmentService {
     }
 
     public void updateDepartment(Department department, Long departmentId) {
-        Department oldDpt = this.departments.get(departmentId);
-        Department newDpt = new Department();
-
-        this.departments.remove(departmentId);
-
-        newDpt.setDepartmentId(oldDpt.getDepartmentId());
-        newDpt.setParcelIds(oldDpt.getParcelIds());
-
-        if (department.getLocation() != null) {
-            newDpt.setLocation(department.getLocation());
-        } else {
-            newDpt.setLocation(oldDpt.getLocation());
-        }
-        if (department.getWorkingHours() != null) {
-            newDpt.setWorkingHours(department.getWorkingHours());
-        } else {
-            newDpt.setWorkingHours(oldDpt.getWorkingHours());
-        }
-
-        this.departments.put(newDpt.getDepartmentId(), newDpt);
+        this.departments.put(departmentId, department);
     }
 
     public void deleteDepartment(Long departmentId) {
@@ -166,18 +146,14 @@ public class DepartmentService {
     }
 
     @PreDestroy
-    private void saveDepartments() {
-        List<Department> list = this.departments.values().stream().toList();
-        departmentFileStore.saveDepartments(list, false);
+    private void saveDepartments() throws IOException {
+        departmentFileStore.saveDepartments(this.departments, "res\\");
     }
 
     @PostConstruct
-    private void loadDepartments() throws IOException, ParseException {
-        if (departmentFileStore.loadDepartments(false) != null) {
-            List<Department> list = departmentFileStore.loadDepartments(false);
-            for (Department department: list) {
-                this.departments.put(department.getDepartmentId(), department);
-            }
+    private void loadDepartments() throws IOException {
+        if (departmentFileStore.loadDepartments("res\\") != null) {
+            this.departments = departmentFileStore.loadDepartments("res\\");
         }
     }
 

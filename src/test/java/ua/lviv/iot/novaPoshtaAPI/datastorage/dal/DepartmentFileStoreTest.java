@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DepartmentFileStoreTest {
 
-    List<Department> list = new LinkedList<>();
+    HashMap<Long, Department> map = new HashMap<>();
     DepartmentFileStore departmentFileStore = new DepartmentFileStore();
 
     @BeforeEach
-    void setUp() throws ParseException {
+    void setUp() {
         List<Long> parcelIds1 = new LinkedList<>();
         parcelIds1.add(1L);
         parcelIds1.add(2L);
@@ -46,17 +46,17 @@ class DepartmentFileStoreTest {
                 "10:00-18:00", parcelIds5);
 
 
-        list.add(department1);
-        list.add(department2);
-        list.add(department3);
-        list.add(department4);
-        list.add(department5);
+        map.put(department1.getDepartmentId(), department1);
+        map.put(department2.getDepartmentId(), department2);
+        map.put(department3.getDepartmentId(), department3);
+        map.put(department4.getDepartmentId(), department4);
+        map.put(department5.getDepartmentId(), department5);
     }
 
     @Test
-    void SaveAndLoadDepartments() throws IOException, ParseException {
-        departmentFileStore.saveDepartments(list, true);
-        List<Department> resultList = departmentFileStore.loadDepartments(true);
+    void SaveAndLoadDepartments() throws IOException {
+        departmentFileStore.saveDepartments(map, "res\\test\\");
+        HashMap<Long, Department> resultMap = departmentFileStore.loadDepartments("res\\test\\");
         String expected = "[Department(departmentId=1, location=Nyzynna street 5 (Lviv), " +
                 "workingHours=08:00-19:00, parcelIds=[1, 2, 3]), " +
                 "Department(departmentId=2, location=Short street 7 (Lviv), " +
@@ -67,6 +67,6 @@ class DepartmentFileStoreTest {
                 "workingHours=07:00-21:00, parcelIds=[7, 8, 9]), " +
                 "Department(departmentId=5, location=Lvivs'ka street 12 (Kryvyi Rih), " +
                 "workingHours=10:00-18:00, parcelIds=[10, 11])]";
-        assertEquals(expected, resultList.toString());
+        assertEquals(expected, resultMap.values().stream().toList().toString());
     }
 }

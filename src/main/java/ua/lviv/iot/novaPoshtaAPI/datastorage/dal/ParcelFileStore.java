@@ -5,77 +5,45 @@ import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import ua.lviv.iot.novaPoshtaAPI.Util;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.HashMap;
 
 @Component
 public class ParcelFileStore {
 
-    public List<Parcel> loadParcels(boolean isTest) throws IOException, ParseException {
-        List<Parcel> resultList = new LinkedList<>();
+    public HashMap<Long, Parcel> loadParcels(String directoryPath) throws IOException, ParseException {
+        HashMap<Long, Parcel> resultMap = new HashMap<>();
 
-        File directory = new File("res");
+        File directory = new File(directoryPath);
         if (!directory.exists()) {
             directory.mkdir();
         }
 
-        String testPath = "";
-        if (isTest) {
-            testPath = "test\\";
-        }
-        directory = new File("res\\test");
-        if (!directory.exists()) {
-            directory.mkdir();
+        for (File file: Util.validateFile(directoryPath, "parcel")) {
+            resultMap.putAll(scanParcel(file));
         }
 
-        File file;
-
-        String year = Integer.toString(LocalDate.now().getYear());
-        String month;
-
-        if (LocalDate.now().getMonthValue() < 10) {
-            month = "0" + LocalDate.now().getMonthValue();
-        } else {
-            month = Integer.toString(LocalDate.now().getMonthValue());
-        }
-
-        for (int i = 1; i <= LocalDate.now().getDayOfMonth(); i++) {
-            if (i < 10) {
-                if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-0" + i + ".csv");
-                    resultList.addAll(scanParcel(file));
-                }
-            } else {
-                if (Files.exists(Paths.get("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv"))) {
-                    file = new File("res\\" + testPath + "parcel-" + year + "-" + month + "-" + i + ".csv");
-                    resultList.addAll(scanParcel(file));
-                }
-            }
-        }
-
-        return resultList;
+        return resultMap;
     }
 
-    private List<Parcel> scanParcel(File file) throws ParseException, IOException {
-        List<Parcel> resultParcels = new LinkedList<>();
+    private HashMap<Long, Parcel> scanParcel(File file) throws ParseException, IOException {
+        HashMap<Long, Parcel> resultParcels = new HashMap<>();
         Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
         boolean isFirst = true;
         while (scanner.hasNextLine()) {
             if (!isFirst) {
                 List<String> values = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                resultParcels.add(fillParcel(values));
+                Parcel parcel = fillParcel(values);
+                resultParcels.put(parcel.getParcelId(), parcel);
             } else {
                 scanner.nextLine();
                 isFirst = false;
@@ -104,33 +72,22 @@ public class ParcelFileStore {
         return parcel;
     }
 
-    public void saveParcels(final List<Parcel> parcels, boolean isTest) {
+    public void saveParcels(final HashMap<Long, Parcel> parcels, String directoryPath) throws IOException {
         String date = Util.getDateNow();
 
-        File directory = new File("res");
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        String testPath = "";
-        if (isTest) {
-            testPath = "test\\";
-        }
-        directory = new File("res\\test");
+        File directory = new File(directoryPath);
         if (!directory.exists()) {
             directory.mkdir();
         }
 
 
-        File file = new File("res\\" + testPath + "parcel-" + date + ".csv");
-        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);) {
-            writer.write(parcels.get(0).getHeaders() + "\n");
-            for (Parcel parcel : parcels) {
-                writer.write(parcel.toCSV() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        File file = new File(directoryPath + "parcel-" + date + ".csv");
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+        writer.write(parcels.values().stream().toList().get(0).getHeaders() + "\n");
+        for (Parcel parcel : parcels.values()) {
+            writer.write(parcel.toCSV() + "\n");
         }
+        writer.close();
 
     }
 

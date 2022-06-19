@@ -18,7 +18,7 @@ public class ParcelController {
     private ParcelService parcelService;
 
     @GetMapping
-    private List<Parcel> getAllParcels() {
+    public List<Parcel> getAllParcels() {
         return parcelService.getAllParcels();
     }
 

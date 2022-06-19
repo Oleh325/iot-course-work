@@ -1,5 +1,6 @@
 package ua.lviv.iot.novaPoshtaAPI.datastorage.dal;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
@@ -7,14 +8,13 @@ import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class ParcelFileStoreTest {
 
-    List<Parcel> list = new LinkedList<>();
+    HashMap<Long, Parcel> map = new HashMap<>();
     ParcelFileStore parcelFileStore = new ParcelFileStore();
 
     @BeforeEach
@@ -30,17 +30,17 @@ class ParcelFileStoreTest {
         Parcel parcel5 = new Parcel(5L, 3.0f, 25.0f, 30.0f, 31.0f, "Kryvyi Rih",
                 "Kyiv", "Kyiv", new SimpleDateFormat("yyyy-MM-dd").parse("2022-06-02"));
 
-        list.add(parcel1);
-        list.add(parcel2);
-        list.add(parcel3);
-        list.add(parcel4);
-        list.add(parcel5);
+        map.put(parcel1.getParcelId(), parcel1);
+        map.put(parcel2.getParcelId(), parcel2);
+        map.put(parcel3.getParcelId(), parcel3);
+        map.put(parcel4.getParcelId(), parcel4);
+        map.put(parcel5.getParcelId(), parcel5);
     }
 
     @Test
     void SaveAndLoadParcels() throws IOException, ParseException {
-        parcelFileStore.saveParcels(list, true);
-        List<Parcel> resultList = parcelFileStore.loadParcels(true);
+        parcelFileStore.saveParcels(map, "res\\test\\");
+        HashMap<Long, Parcel> resultMap = parcelFileStore.loadParcels("res\\test\\");
         String expected = "[Parcel(parcelId=1, weightInKgs=10.0, heightInCm=15.0, widthInCm=20.0, lengthInCm=30.0, " +
                 "origin=Lviv, destination=Kharkiv, location=Kharkiv, dateSent=Tue Jun 14 00:00:00 EEST 2022), " +
                 "Parcel(parcelId=2, weightInKgs=5.0, heightInCm=12.0, widthInCm=10.0, lengthInCm=20.0, " +
@@ -51,7 +51,7 @@ class ParcelFileStoreTest {
                 "origin=Lviv, destination=Ternopil, location=Lviv, dateSent=Mon Jun 13 00:00:00 EEST 2022), " +
                 "Parcel(parcelId=5, weightInKgs=3.0, heightInCm=25.0, widthInCm=30.0, lengthInCm=31.0, " +
                 "origin=Kryvyi Rih, destination=Kyiv, location=Kyiv, dateSent=Thu Jun 02 00:00:00 EEST 2022)]";
-        assertEquals(expected, resultList.toString());
+        Assertions.assertEquals(expected, resultMap.values().stream().toList().toString());
     }
 
 }
