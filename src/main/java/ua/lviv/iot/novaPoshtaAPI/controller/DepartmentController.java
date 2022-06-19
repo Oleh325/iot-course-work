@@ -85,19 +85,19 @@ public class DepartmentController {
         departmentService.deliverParcel(departmentIdFrom, departmentIdTo, parcelId);
     }
 
-    @PostMapping("/couriers")
-    public void addCourier(@RequestBody Courier courier) {
-        departmentService.addCourier(courier);
+    @PostMapping("/{departmentId}/couriers")
+    public void addCourier(@PathVariable Long departmentId, @RequestBody Courier courier) {
+        departmentService.addCourier(departmentId, courier);
     }
 
-    @PutMapping("/couriers/{courierId}")
-    public void updateCourier(@RequestBody Courier courier, @PathVariable Long courierId) {
-        departmentService.updateCourier(courier, courierId);
+    @PutMapping("/{departmentId}/couriers/{courierId}")
+    public void updateCourier(@PathVariable Long departmentId, @RequestBody Courier courier, @PathVariable Long courierId) {
+        departmentService.updateCourier(departmentId, courier, courierId);
     }
 
-    @DeleteMapping("/couriers/{courierId}")
-    public void deleteCourier(@PathVariable Long courierId) {
-        departmentService.deleteCourier(courierId);
+    @DeleteMapping("/{departmentId}/couriers/{courierId}")
+    public void deleteCourier(@PathVariable Long departmentId, @PathVariable Long courierId) {
+        departmentService.deleteCourier(departmentId, courierId);
     }
 
 }

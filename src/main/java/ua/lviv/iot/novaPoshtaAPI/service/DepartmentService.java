@@ -49,6 +49,11 @@ public class DepartmentService {
         for (Long parcelId: this.departments.get(departmentId).getParcelIds()) {
             parcelService.deleteParcel(parcelId);
         }
+        for (Courier courier: courierService.getAllCouriers()) {
+            if (Objects.equals(courier.getDepartmentId(), departmentId)) {
+                courierService.deleteCourier(courier.getCourierId());
+            }
+        }
         this.departments.remove(departmentId);
     }
 
@@ -129,20 +134,24 @@ public class DepartmentService {
         }
     }
 
-    public void addCourier(Courier courier) {
-        if (this.departments.get(courier.getDepartmentId()) != null) {
+    public void addCourier(Long departmentId, Courier courier) {
+        if (this.departments.get(departmentId) != null) {
+            courier.setDepartmentId(departmentId);
             courierService.addCourier(courier);
         }
     }
 
-    public void updateCourier(Courier courier, Long courierId) {
-        if (this.departments.get(courier.getDepartmentId()) != null) {
+    public void updateCourier(Long departmentId, Courier courier, Long courierId) {
+        if (this.departments.get(departmentId) != null) {
+            courier.setDepartmentId(departmentId);
             courierService.updateCourier(courier, courierId);
         }
     }
 
-    public void deleteCourier(Long courierId) {
-        courierService.deleteCourier(courierId);
+    public void deleteCourier(Long departmentId, Long courierId) {
+        if (this.departments.get(departmentId) != null) {
+            courierService.deleteCourier(courierId);
+        }
     }
 
     @PreDestroy
