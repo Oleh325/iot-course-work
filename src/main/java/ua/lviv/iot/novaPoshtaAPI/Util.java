@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Util {
 
-    public static String getTimeNow() {
+    public static String getDateNow() {
         String year = Integer.toString(LocalDate.now().getYear());
         String month;
         String day;

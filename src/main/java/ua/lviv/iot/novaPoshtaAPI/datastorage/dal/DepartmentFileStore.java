@@ -149,7 +149,7 @@ public class DepartmentFileStore {
     }
 
     public void saveDepartments(final List<Department> departments, boolean isTest) {
-        String date = Util.getTimeNow();
+        String date = Util.getDateNow();
 
         File directory = new File("res");
         if (!directory.exists()) {

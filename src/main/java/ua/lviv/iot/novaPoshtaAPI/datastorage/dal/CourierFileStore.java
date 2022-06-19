@@ -150,7 +150,7 @@ public class CourierFileStore {
     }
 
     public void saveCouriers(final List<Courier> couriers, boolean isTest) {
-        String date = Util.getTimeNow();
+        String date = Util.getDateNow();
 
         File directory = new File("res");
         if (!directory.exists()) {

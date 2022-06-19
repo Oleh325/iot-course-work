@@ -105,7 +105,7 @@ public class ParcelFileStore {
     }
 
     public void saveParcels(final List<Parcel> parcels, boolean isTest) {
-        String date = Util.getTimeNow();
+        String date = Util.getDateNow();
 
         File directory = new File("res");
         if (!directory.exists()) {
