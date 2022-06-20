@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fc8bcaa4-6fb5-4044-97f6-1eb35743c1c8",
+		"_postman_id": "3674766e-973b-4534-b346-d6d819ae91c2",
 		"name": "CourseWorkCollection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15485363"
@@ -609,7 +609,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Courier 1 to Department 2",
+			"name": "Add Courier 1 to Department 1",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -629,13 +629,14 @@
 					"raw": "{\r\n    \"courierId\": 1,\r\n   \"departmentId\": 2,\r\n    \"fullName\": \"Melnyk Andrii\",\r\n    \"working\": false\r\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/departments/couriers/",
+					"raw": "localhost:8080/departments/1/couriers/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"departments",
+						"1",
 						"couriers",
 						""
 					]
@@ -664,13 +665,14 @@
 					"raw": "{\r\n    \"courierId\": 2,\r\n   \"departmentId\": 1,\r\n    \"fullName\": \"Ochakenko Anton\",\r\n    \"working\": true\r\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/departments/couriers/",
+					"raw": "localhost:8080/departments/1/couriers/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"departments",
+						"1",
 						"couriers",
 						""
 					]
@@ -699,13 +701,14 @@
 					"raw": "{\r\n    \"courierId\": 3,\r\n   \"departmentId\": 3,\r\n    \"fullName\": \"Pavlyk Vadym\",\r\n    \"working\": true\r\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/departments/couriers/",
+					"raw": "localhost:8080/departments/3/couriers/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"departments",
+						"3",
 						"couriers",
 						""
 					]
@@ -793,13 +796,14 @@
 					"raw": "{\r\n    \"fullName\": \"Melnyk Ivan\",\r\n    \"working\": true\r\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/departments/couriers/1",
+					"raw": "localhost:8080/departments/2/couriers/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"departments",
+						"2",
 						"couriers",
 						"1"
 					]
@@ -828,13 +832,14 @@
 					"raw": "{\r\n    \"fullName\": \"Melnyk Ivan\",\r\n    \"working\": true\r\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/departments/couriers/3",
+					"raw": "localhost:8080/departments/3/couriers/3",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"departments",
+						"3",
 						"couriers",
 						"3"
 					]

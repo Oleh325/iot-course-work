@@ -42,7 +42,21 @@ public class DepartmentService {
     }
 
     public void updateDepartment(Department department, Long departmentId) {
-        this.departments.put(departmentId, department);
+        if (this.departments.get(departmentId) != null) {
+            if (department.getDepartmentId() == null) {
+                department.setDepartmentId(departmentId);
+            }
+            if (department.getLocation() == null) {
+                department.setLocation(this.departments.get(departmentId).getLocation());
+            }
+            if (department.getWorkingHours() == null) {
+                department.setWorkingHours(this.departments.get(departmentId).getWorkingHours());
+            }
+            if (department.getParcelIds() == null) {
+                department.setParcelIds(this.departments.get(departmentId).getParcelIds());
+            }
+            this.departments.put(departmentId, department);
+        }
     }
 
     public void deleteDepartment(Long departmentId) {
