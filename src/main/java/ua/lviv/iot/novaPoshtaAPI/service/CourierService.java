@@ -8,6 +8,7 @@ import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +77,7 @@ public class CourierService {
     }
 
     @PostConstruct
-    private void loadCouriers() throws IOException {
+    private void loadCouriers() throws IOException, ParseException {
         if (courierFileStore.loadCouriers("res\\") != null) {
             this.couriers = courierFileStore.loadCouriers("res\\");
         }

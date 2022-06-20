@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +55,7 @@ class DepartmentFileStoreTest {
     }
 
     @Test
-    void SaveAndLoadDepartments() throws IOException {
+    void SaveAndLoadDepartments() throws IOException, ParseException {
         departmentFileStore.saveDepartments(map, "res\\test\\");
         HashMap<Long, Department> resultMap = departmentFileStore.loadDepartments("res\\test\\");
         String expected = "[Department(departmentId=1, location=Nyzynna street 5 (Lviv), " +

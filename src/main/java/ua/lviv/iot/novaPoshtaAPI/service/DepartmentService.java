@@ -10,6 +10,7 @@ import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -174,7 +175,7 @@ public class DepartmentService {
     }
 
     @PostConstruct
-    private void loadDepartments() throws IOException {
+    private void loadDepartments() throws IOException, ParseException {
         if (departmentFileStore.loadDepartments("res\\") != null) {
             this.departments = departmentFileStore.loadDepartments("res\\");
         }

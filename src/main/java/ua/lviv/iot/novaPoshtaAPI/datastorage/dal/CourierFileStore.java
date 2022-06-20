@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 @Component
 public class CourierFileStore {
 
-    public HashMap<Long, Courier> loadCouriers(String directoryPath) throws IOException {
+    public HashMap<Long, Courier> loadCouriers(String directoryPath) throws IOException, ParseException {
         Util.generateDirectory(directoryPath);
 
         return new HashMap<>(scanCourier(Util.validateFile(directoryPath, "courier")));

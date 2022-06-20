@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +53,7 @@ class CourierFileStoreTest {
     }
 
     @Test
-    void SaveAndLoadCouriers() throws IOException {
+    void SaveAndLoadCouriers() throws IOException, ParseException {
         courierFileStore.saveCouriers(map, "res\\test\\");
         HashMap<Long, Courier> resultMap = courierFileStore.loadCouriers("res\\test\\");
         String expected = "[Courier(courierId=1, departmentId=1, fullName=Pavelchak Andrii, " +

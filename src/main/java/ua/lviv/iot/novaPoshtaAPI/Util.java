@@ -3,7 +3,13 @@ package ua.lviv.iot.novaPoshtaAPI;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,72 +18,39 @@ public final class Util {
     private Util() { }
 
     public static String getDateNow() {
-        String year = Integer.toString(LocalDate.now().getYear());
-        String month;
-        String day;
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (LocalDate.now().getMonthValue() < 10) {
-            month = "0" + LocalDate.now().getMonthValue();
-        } else {
-            month = Integer.toString(LocalDate.now().getMonthValue());
-        }
-        if (LocalDate.now().getDayOfMonth() < 10) {
-            day = "0" + LocalDate.now().getDayOfMonth();
-        } else {
-            day = Integer.toString(LocalDate.now().getDayOfMonth());
-        }
-
-        return year + "-" + month + "-" + day;
+        return formatter.format(date);
     }
 
-    public static File validateFile(String directoryPath, String objectPrefix) {
+    public static File validateFile(String directoryPath, String objectPrefix) throws ParseException {
         File file = generateFile(directoryPath, objectPrefix);
 
         File directory = new File(directoryPath);
         if (directory.length() != 0) {
-            for (int year = LocalDate.now().getYear(); year > 1970; year--) {
-                for (int month = 12; month > 0; month--) {
-                    file = findFile(directoryPath, objectPrefix, year, month);
-                    if (file.length() != 0) {
-                        break;
-                    }
-                }
-                if (file.length() != 0) {
-                    break;
-                }
-            }
+            file = findFile(directoryPath, objectPrefix);
         }
 
         return file;
     }
 
-    public static File findFile(String directoryPath, String objectPrefix, int yearInt, int monthInt) {
+    public static File findFile(String directoryPath, String objectPrefix) throws ParseException {
         File file = new File("");
-        String year = Integer.toString(yearInt);
-        String month;
-        if (monthInt < 10) {
-            month = "0" + monthInt;
-        } else {
-            month = Integer.toString(monthInt);
-        }
 
-        for (int day = LocalDate.now().getDayOfMonth(); day > 0; day--) {
-            if (day < 10) {
-                if (Files.exists(Paths.get(directoryPath + objectPrefix + "-" + year + "-"
-                        + month + "-0" + day + ".csv"))) {
-                    file = new File(directoryPath + objectPrefix + "-" + year + "-"
-                            + month + "-0" + day + ".csv");
-                    break;
-                }
-            } else {
-                if (Files.exists(Paths.get(directoryPath + objectPrefix + "-" + year + "-"
-                        + month + "-" + day + ".csv"))) {
-                    file = new File(directoryPath + objectPrefix + "-" + year + "-"
-                            + month + "-" + day + ".csv");
-                    break;
-                }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (LocalDate date = LocalDate.now(); date.isAfter(formatter.parse("1970-01-01").toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate()); date = date.minusDays(1)) {
+            DateTimeFormatter pathFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String datePath = date.format(pathFormatter);
+
+            if (Files.exists(Paths.get(directoryPath + objectPrefix + "-" + datePath + ".csv"))) {
+                file = new File(directoryPath + objectPrefix + "-" + datePath + ".csv");
+                break;
             }
         }
+
         return file;
     }
 
