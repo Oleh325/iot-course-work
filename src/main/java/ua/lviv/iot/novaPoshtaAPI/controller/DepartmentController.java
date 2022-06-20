@@ -70,7 +70,8 @@ public class DepartmentController {
     }
 
     @PutMapping("/{departmentId}/parcels/{parcelId}")
-    public void updateParcel(@PathVariable Long departmentId, @PathVariable Long parcelId, @RequestBody Parcel parcel) {
+    public void updateParcel(@PathVariable Long departmentId, @PathVariable Long parcelId,
+                             @RequestBody Parcel parcel) {
         departmentService.updateParcel(departmentId, parcel, parcelId);
     }
 
@@ -91,7 +92,8 @@ public class DepartmentController {
     }
 
     @PutMapping("/{departmentId}/couriers/{courierId}")
-    public void updateCourier(@PathVariable Long departmentId, @RequestBody Courier courier, @PathVariable Long courierId) {
+    public void updateCourier(@PathVariable Long departmentId, @RequestBody Courier courier,
+                              @PathVariable Long courierId) {
         departmentService.updateCourier(departmentId, courier, courierId);
     }
 

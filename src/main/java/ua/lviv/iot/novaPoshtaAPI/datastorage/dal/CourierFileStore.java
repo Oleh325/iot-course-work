@@ -22,18 +22,9 @@ import java.util.HashMap;
 public class CourierFileStore {
 
     public HashMap<Long, Courier> loadCouriers(String directoryPath) throws IOException {
-        HashMap<Long, Courier> resultMap = new HashMap<>();
+        Util.generateDirectory(directoryPath);
 
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        for (File file: Util.validateFile(directoryPath, "courier")) {
-            resultMap.putAll(scanCourier(file));
-        }
-
-        return resultMap;
+        return new HashMap<>(scanCourier(Util.validateFile(directoryPath, "courier")));
     }
 
     private HashMap<Long, Courier> scanCourier(File file) throws IOException {
@@ -43,7 +34,7 @@ public class CourierFileStore {
         while (scanner.hasNextLine()) {
             if (!isFirst) {
                 List<String> rawValues = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                List<String> values = processRawValues(rawValues);
+                List<String> values = Util.processRawValues(rawValues);
                 Courier courier = fillCourier(values);
                 resultCouriers.put(courier.getCourierId(), courier);
             } else {
@@ -52,51 +43,6 @@ public class CourierFileStore {
             }
         }
         return resultCouriers;
-    }
-
-    private List<String> processRawValues(List<String> rawValues) {
-        List<String> values = new LinkedList<>();
-        boolean isList = false;
-        String listValue = "";
-        for (String value : rawValues) {
-            if (value.equals("null")) {
-                values.add("");
-            } else if (value.contains("[") && value.contains("]")) {
-                if (value.equals("[]")) {
-                    values.add("");
-                } else {
-                    int i = 1;
-                    while (value.charAt(i) != ']') {
-                        listValue += value.charAt(i);
-                        i++;
-                    }
-                    values.add(listValue);
-                    isList = false;
-                }
-            } else if (value.contains("[")) {
-                isList = true;
-                for (int i = 1; i < value.length(); i++) {
-                    listValue += value.charAt(i);
-                }
-                listValue += ", ";
-            } else if (isList) {
-                if (value.contains("]")) {
-                    int i = 0;
-                    while (value.charAt(i) != ']') {
-                        listValue += value.charAt(i);
-                        i++;
-                    }
-                    values.add(listValue);
-                    isList = false;
-                } else {
-                    listValue += value + ", ";
-                }
-            } else {
-                values.add(value);
-            }
-        }
-        listValue = "";
-        return values;
     }
 
     private Courier fillCourier(List<String> values) {
@@ -124,14 +70,9 @@ public class CourierFileStore {
     }
 
     public void saveCouriers(final HashMap<Long, Courier> couriers, String directoryPath) throws IOException {
-        String date = Util.getDateNow();
+        Util.generateDirectory(directoryPath);
+        File file = Util.generateFile(directoryPath, "courier");
 
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        File file = new File(directoryPath + "courier-" + date + ".csv");
         Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         writer.write(couriers.values().stream().toList().get(0).getHeaders() + "\n");
         for (Courier courier: couriers.values()) {
@@ -140,5 +81,7 @@ public class CourierFileStore {
         writer.close();
 
     }
+
+
 
 }

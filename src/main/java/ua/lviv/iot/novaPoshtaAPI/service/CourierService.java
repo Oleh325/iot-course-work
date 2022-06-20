@@ -20,7 +20,7 @@ public class CourierService {
     @Autowired
     private CourierFileStore courierFileStore;
 
-    HashMap<Long, Courier> couriers = new HashMap<>();
+    private HashMap<Long, Courier> couriers = new HashMap<>();
 
     public List<Courier> getAllCouriers() {
         return new LinkedList<>(this.couriers.values());

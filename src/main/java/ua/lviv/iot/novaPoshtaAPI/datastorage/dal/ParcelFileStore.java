@@ -21,18 +21,9 @@ import java.util.HashMap;
 public class ParcelFileStore {
 
     public HashMap<Long, Parcel> loadParcels(String directoryPath) throws IOException, ParseException {
-        HashMap<Long, Parcel> resultMap = new HashMap<>();
+        Util.generateDirectory(directoryPath);
 
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        for (File file: Util.validateFile(directoryPath, "parcel")) {
-            resultMap.putAll(scanParcel(file));
-        }
-
-        return resultMap;
+        return new HashMap<>(scanParcel(Util.validateFile(directoryPath, "parcel")));
     }
 
     private HashMap<Long, Parcel> scanParcel(File file) throws ParseException, IOException {
@@ -73,15 +64,9 @@ public class ParcelFileStore {
     }
 
     public void saveParcels(final HashMap<Long, Parcel> parcels, String directoryPath) throws IOException {
-        String date = Util.getDateNow();
+        Util.generateDirectory(directoryPath);
+        File file = Util.generateFile(directoryPath, "parcel");
 
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-
-        File file = new File(directoryPath + "parcel-" + date + ".csv");
         Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         writer.write(parcels.values().stream().toList().get(0).getHeaders() + "\n");
         for (Parcel parcel : parcels.values()) {
