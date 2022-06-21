@@ -1,5 +1,6 @@
 package ua.lviv.iot.novaPoshtaAPI.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@SuppressFBWarnings
 public class Parcel {
     private Long parcelId;
     private float weightInKgs;

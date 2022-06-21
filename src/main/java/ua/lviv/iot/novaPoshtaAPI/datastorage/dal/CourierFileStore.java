@@ -6,9 +6,6 @@ import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -30,18 +27,21 @@ public class CourierFileStore {
 
     private HashMap<Long, Courier> scanCourier(File file) throws IOException {
         HashMap<Long, Courier> resultCouriers = new HashMap<>();
-        Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
-        boolean isFirst = true;
-        while (scanner.hasNextLine()) {
-            if (!isFirst) {
-                List<String> rawValues = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                List<String> values = Util.processRawValues(rawValues);
-                Courier courier = fillCourier(values);
-                resultCouriers.put(courier.getCourierId(), courier);
-            } else {
-                scanner.nextLine();
-                isFirst = false;
+        if (file.exists()) {
+            Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
+            boolean isFirst = true;
+            while (scanner.hasNextLine()) {
+                if (!isFirst) {
+                    List<String> rawValues = Arrays.stream(scanner.nextLine().split(", ")).toList();
+                    List<String> values = Util.processRawValues(rawValues);
+                    Courier courier = fillCourier(values);
+                    resultCouriers.put(courier.getCourierId(), courier);
+                } else {
+                    scanner.nextLine();
+                    isFirst = false;
+                }
             }
+            scanner.close();
         }
         return resultCouriers;
     }
@@ -64,6 +64,7 @@ public class CourierFileStore {
                         courier.setParcelIds(ids);
                     }
                 }
+                default -> { }
             }
             index++;
         }
@@ -74,15 +75,12 @@ public class CourierFileStore {
         Util.generateDirectory(directoryPath);
         File file = Util.generateFile(directoryPath, "courier");
 
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-        writer.write(couriers.values().stream().toList().get(0).getHeaders() + "\n");
+        String content = couriers.values().stream().toList().get(0).getHeaders() + "\n";
         for (Courier courier: couriers.values()) {
-            writer.write(courier.toCSV() + "\n");
+            content += courier.toCSV() + "\n";
         }
-        writer.close();
 
+        Util.writeContentToFile(file, content);
     }
-
-
 
 }

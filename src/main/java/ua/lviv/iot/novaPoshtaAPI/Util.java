@@ -1,6 +1,13 @@
 package ua.lviv.iot.novaPoshtaAPI;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -15,13 +22,21 @@ import java.util.List;
 
 public final class Util {
 
-    private Util() { }
+    private Util() {
+        throw new AssertionError("Instantiating utility class.");
+    }
 
     public static String getDateNow() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         return formatter.format(date);
+    }
+
+    public static void writeContentToFile(File file, String content) throws IOException {
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+        writer.write(content);
+        writer.close();
     }
 
     public static File validateFile(String directoryPath, String objectPrefix) throws ParseException {
@@ -60,10 +75,11 @@ public final class Util {
         return new File(directoryPath + objectPrefix + "-" + date + ".csv");
     }
 
+    @SuppressFBWarnings
     public static void generateDirectory(String directoryPath) {
         File directory = new File(directoryPath);
         if (!directory.exists()) {
-            directory.mkdir();
+            directory.mkdirs();
         }
     }
 

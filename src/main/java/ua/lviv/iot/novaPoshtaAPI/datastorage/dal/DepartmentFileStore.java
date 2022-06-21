@@ -6,9 +6,6 @@ import ua.lviv.iot.novaPoshtaAPI.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -30,18 +27,21 @@ public class DepartmentFileStore {
 
     private HashMap<Long, Department> scanDepartment(File file) throws IOException {
         HashMap<Long, Department> resultDepartments = new HashMap<>();
-        Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
-        boolean isFirst = true;
-        while (scanner.hasNextLine()) {
-            if (!isFirst) {
-                List<String> rawValues = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                List<String> values = Util.processRawValues(rawValues);
-                Department department = fillDepartment(values);
-                resultDepartments.put(department.getDepartmentId(), department);
-            } else {
-                scanner.nextLine();
-                isFirst = false;
+        if (file.exists()) {
+            Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
+            boolean isFirst = true;
+            while (scanner.hasNextLine()) {
+                if (!isFirst) {
+                    List<String> rawValues = Arrays.stream(scanner.nextLine().split(", ")).toList();
+                    List<String> values = Util.processRawValues(rawValues);
+                    Department department = fillDepartment(values);
+                    resultDepartments.put(department.getDepartmentId(), department);
+                } else {
+                    scanner.nextLine();
+                    isFirst = false;
+                }
             }
+            scanner.close();
         }
         return resultDepartments;
     }
@@ -63,6 +63,7 @@ public class DepartmentFileStore {
                         department.setParcelIds(ids);
                     }
                 }
+                default -> { }
             }
             index++;
         }
@@ -73,12 +74,12 @@ public class DepartmentFileStore {
         Util.generateDirectory(directoryPath);
         File file = Util.generateFile(directoryPath, "department");
 
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-        writer.write(departments.values().stream().toList().get(0).getHeaders() + "\n");
-        for (Department department : departments.values()) {
-            writer.write(department.toCSV() + "\n");
+        String content = departments.values().stream().toList().get(0).getHeaders() + "\n";
+        for (Department department: departments.values()) {
+            content += department.toCSV() + "\n";
         }
-        writer.close();
+
+        Util.writeContentToFile(file, content);
 
     }
 

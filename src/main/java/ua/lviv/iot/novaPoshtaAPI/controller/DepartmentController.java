@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
-import ua.lviv.iot.novaPoshtaAPI.model.Parcel;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 
 import java.util.List;
@@ -46,60 +44,6 @@ public class DepartmentController {
     @DeleteMapping("/{departmentId}")
     public void deleteDepartment(@PathVariable Long departmentId) {
         departmentService.deleteDepartment(departmentId);
-    }
-
-    @RequestMapping("/{departmentId}/couriers/{courierId}/parcels/{parcelId}")
-    public void giveParcelToCourier(@PathVariable Long departmentId, @PathVariable Long courierId,
-                                    @PathVariable Long parcelId) {
-        departmentService.giveParcelToCourier(departmentId, courierId, parcelId);
-    }
-
-    @GetMapping("/{departmentId}/parcels")
-    public List<Parcel> getAllParcels(@PathVariable Long departmentId) {
-        return departmentService.getAllParcels(departmentId);
-    }
-
-    @GetMapping("/{departmentId}/parcels/{parcelId}")
-    public Parcel getParcelById(@PathVariable Long departmentId, @PathVariable Long parcelId) {
-        return departmentService.getParcelById(departmentId, parcelId);
-    }
-
-    @PostMapping("/{departmentId}/parcels")
-    public void addParcel(@PathVariable Long departmentId, @RequestBody Parcel parcel) {
-        departmentService.addParcel(departmentId, parcel);
-    }
-
-    @PutMapping("/{departmentId}/parcels/{parcelId}")
-    public void updateParcel(@PathVariable Long departmentId, @PathVariable Long parcelId,
-                             @RequestBody Parcel parcel) {
-        departmentService.updateParcel(departmentId, parcel, parcelId);
-    }
-
-    @DeleteMapping("/{departmentId}/parcels/{parcelId}")
-    public void deleteParcel(@PathVariable Long departmentId, @PathVariable Long parcelId) {
-        departmentService.deleteParcel(departmentId, parcelId);
-    }
-
-    @RequestMapping("/{departmentIdFrom}/deliver/{departmentIdTo}/parcels/{parcelId}")
-    public void deliverParcel(@PathVariable Long departmentIdFrom, @PathVariable Long departmentIdTo,
-                              @PathVariable Long parcelId) {
-        departmentService.deliverParcel(departmentIdFrom, departmentIdTo, parcelId);
-    }
-
-    @PostMapping("/{departmentId}/couriers")
-    public void addCourier(@PathVariable Long departmentId, @RequestBody Courier courier) {
-        departmentService.addCourier(departmentId, courier);
-    }
-
-    @PutMapping("/{departmentId}/couriers/{courierId}")
-    public void updateCourier(@PathVariable Long departmentId, @RequestBody Courier courier,
-                              @PathVariable Long courierId) {
-        departmentService.updateCourier(departmentId, courier, courierId);
-    }
-
-    @DeleteMapping("/{departmentId}/couriers/{courierId}")
-    public void deleteCourier(@PathVariable Long departmentId, @PathVariable Long courierId) {
-        departmentService.deleteCourier(departmentId, courierId);
     }
 
 }

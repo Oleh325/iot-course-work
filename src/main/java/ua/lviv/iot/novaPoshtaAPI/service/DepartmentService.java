@@ -169,6 +169,30 @@ public class DepartmentService {
         }
     }
 
+    public List<Courier> getAllCouriers(Long departmentId) {
+        List<Courier> result = new LinkedList<>();
+        for (Courier courier: courierService.getAllCouriers()) {
+            if (Objects.equals(courier.getDepartmentId(), departmentId)) {
+                result.add(courier);
+            }
+        }
+
+        return result;
+    }
+
+    public Courier getCourierById(Long departmentId, Long courierId) {
+        Courier result = new Courier();
+        for (Courier courier: courierService.getAllCouriers()) {
+            if (Objects.equals(courier.getDepartmentId(), departmentId)) {
+                if (Objects.equals(courier.getCourierId(), courierId)) {
+                    result = courier;
+                }
+            }
+        }
+
+        return result;
+    }
+
     @PreDestroy
     private void saveDepartments() throws IOException {
         departmentFileStore.saveDepartments(this.departments, "res\\");

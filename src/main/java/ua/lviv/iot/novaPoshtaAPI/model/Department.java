@@ -1,5 +1,6 @@
 package ua.lviv.iot.novaPoshtaAPI.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@SuppressFBWarnings
 public class Department {
     private Long departmentId;
     private String location;

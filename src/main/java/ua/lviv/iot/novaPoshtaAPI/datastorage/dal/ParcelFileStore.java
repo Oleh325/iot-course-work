@@ -6,9 +6,6 @@ import ua.lviv.iot.novaPoshtaAPI.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,17 +25,20 @@ public class ParcelFileStore {
 
     private HashMap<Long, Parcel> scanParcel(File file) throws ParseException, IOException {
         HashMap<Long, Parcel> resultParcels = new HashMap<>();
-        Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
-        boolean isFirst = true;
-        while (scanner.hasNextLine()) {
-            if (!isFirst) {
-                List<String> values = Arrays.stream(scanner.nextLine().split(", ")).toList();
-                Parcel parcel = fillParcel(values);
-                resultParcels.put(parcel.getParcelId(), parcel);
-            } else {
-                scanner.nextLine();
-                isFirst = false;
+        if (file.exists()) {
+            Scanner scanner = new Scanner(file, StandardCharsets.UTF_8);
+            boolean isFirst = true;
+            while (scanner.hasNextLine()) {
+                if (!isFirst) {
+                    List<String> values = Arrays.stream(scanner.nextLine().split(", ")).toList();
+                    Parcel parcel = fillParcel(values);
+                    resultParcels.put(parcel.getParcelId(), parcel);
+                } else {
+                    scanner.nextLine();
+                    isFirst = false;
+                }
             }
+            scanner.close();
         }
         return resultParcels;
     }
@@ -57,6 +57,7 @@ public class ParcelFileStore {
                 case 6 -> parcel.setDestination(value);
                 case 7 -> parcel.setLocation(value);
                 case 8 -> parcel.setDateSent(new SimpleDateFormat("yyyy-MM-dd").parse(value));
+                default -> { }
             }
             index++;
         }
@@ -67,12 +68,12 @@ public class ParcelFileStore {
         Util.generateDirectory(directoryPath);
         File file = Util.generateFile(directoryPath, "parcel");
 
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-        writer.write(parcels.values().stream().toList().get(0).getHeaders() + "\n");
-        for (Parcel parcel : parcels.values()) {
-            writer.write(parcel.toCSV() + "\n");
+        String content = parcels.values().stream().toList().get(0).getHeaders() + "\n";
+        for (Parcel parcel: parcels.values()) {
+            content += parcel.toCSV() + "\n";
         }
-        writer.close();
+
+        Util.writeContentToFile(file, content);
 
     }
 
