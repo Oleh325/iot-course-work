@@ -71,15 +71,16 @@ public class CourierService {
         this.couriers.remove(courierId);
     }
 
+
     @PreDestroy
     private void saveCouriers() throws IOException {
-        courierFileStore.saveCouriers(this.couriers, "res\\");
+        courierFileStore.save(this.couriers, "res\\");
     }
 
     @PostConstruct
     private void loadCouriers() throws IOException, ParseException {
-        if (courierFileStore.loadCouriers("res\\") != null) {
-            this.couriers = courierFileStore.loadCouriers("res\\");
+        if (courierFileStore.load("res\\") != null) {
+            this.couriers = courierFileStore.load("res\\");
         }
     }
 

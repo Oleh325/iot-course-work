@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @SuppressFBWarnings
-public class Parcel {
+public class Parcel extends Item {
     private Long parcelId;
     private float weightInKgs;
     private float heightInCm;
@@ -27,12 +27,14 @@ public class Parcel {
     private String location;
     private Date dateSent;
 
+    @Override
     public String getHeaders() {
         return "parcelId, weightInKgs, heightInCm, "
                 + "widthInCm, lengthInCm, origin, "
                 + "destination, location, dateSent";
     }
 
+    @Override
     public String toCSV() {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(dateSent);
         return parcelId + ", " + weightInKgs + ", " + heightInCm + ", "

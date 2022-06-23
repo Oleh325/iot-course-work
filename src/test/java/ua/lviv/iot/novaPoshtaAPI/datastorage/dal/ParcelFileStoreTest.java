@@ -39,8 +39,8 @@ class ParcelFileStoreTest {
 
     @Test
     void SaveAndLoadParcels() throws IOException, ParseException {
-        parcelFileStore.saveParcels(map, "res\\test\\");
-        HashMap<Long, Parcel> resultMap = parcelFileStore.loadParcels("res\\test\\");
+        parcelFileStore.save(map, "res\\test\\");
+        HashMap<Long, Parcel> resultMap = parcelFileStore.load("res\\test\\");
         String expected = "[Parcel(parcelId=1, weightInKgs=10.0, heightInCm=15.0, widthInCm=20.0, lengthInCm=30.0, " +
                 "origin=Lviv, destination=Kharkiv, location=Kharkiv, dateSent=Tue Jun 14 00:00:00 EEST 2022), " +
                 "Parcel(parcelId=2, weightInKgs=5.0, heightInCm=12.0, widthInCm=10.0, lengthInCm=20.0, " +

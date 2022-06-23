@@ -56,8 +56,8 @@ class DepartmentFileStoreTest {
 
     @Test
     void SaveAndLoadDepartments() throws IOException, ParseException {
-        departmentFileStore.saveDepartments(map, "res\\test\\");
-        HashMap<Long, Department> resultMap = departmentFileStore.loadDepartments("res\\test\\");
+        departmentFileStore.save(map, "res\\test\\");
+        HashMap<Long, Department> resultMap = departmentFileStore.load("res\\test\\");
         String expected = "[Department(departmentId=1, location=Nyzynna street 5 (Lviv), " +
                 "workingHours=08:00-19:00, parcelIds=[1, 2, 3]), " +
                 "Department(departmentId=2, location=Short street 7 (Lviv), " +

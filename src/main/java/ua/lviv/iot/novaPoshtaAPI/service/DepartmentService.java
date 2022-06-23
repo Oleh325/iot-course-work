@@ -195,13 +195,13 @@ public class DepartmentService {
 
     @PreDestroy
     private void saveDepartments() throws IOException {
-        departmentFileStore.saveDepartments(this.departments, "res\\");
+        departmentFileStore.save(this.departments, "res\\");
     }
 
     @PostConstruct
     private void loadDepartments() throws IOException, ParseException {
-        if (departmentFileStore.loadDepartments("res\\") != null) {
-            this.departments = departmentFileStore.loadDepartments("res\\");
+        if (departmentFileStore.load("res\\") != null) {
+            this.departments = departmentFileStore.load("res\\");
         }
     }
 

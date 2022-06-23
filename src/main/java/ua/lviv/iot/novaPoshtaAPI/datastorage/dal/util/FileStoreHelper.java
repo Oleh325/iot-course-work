@@ -1,4 +1,4 @@
-package ua.lviv.iot.novaPoshtaAPI;
+package ua.lviv.iot.novaPoshtaAPI.datastorage.dal.util;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -20,9 +20,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class Util {
+public final class FileStoreHelper {
 
-    private Util() {
+    private FileStoreHelper() {
         throw new AssertionError("Instantiating utility class.");
     }
 
@@ -70,7 +70,7 @@ public final class Util {
     }
 
     public static File generateFile(String directoryPath, String objectPrefix) {
-        String date = Util.getDateNow();
+        String date = FileStoreHelper.getDateNow();
 
         return new File(directoryPath + objectPrefix + "-" + date + ".csv");
     }

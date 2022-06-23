@@ -72,13 +72,13 @@ public class ParcelService {
 
     @PreDestroy
     private void saveParcels() throws IOException {
-        parcelFileStore.saveParcels(this.parcels, "res\\");
+        parcelFileStore.save(this.parcels, "res\\");
     }
 
     @PostConstruct
     private void loadParcels() throws IOException, ParseException {
-        if (parcelFileStore.loadParcels("res\\") != null) {
-            this.parcels = parcelFileStore.loadParcels("res\\");
+        if (parcelFileStore.load("res\\") != null) {
+            this.parcels = parcelFileStore.load("res\\");
         }
     }
 

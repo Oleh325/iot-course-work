@@ -15,16 +15,18 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @SuppressFBWarnings
-public class Department {
+public class Department extends Item {
     private Long departmentId;
     private String location;
     private String workingHours;
     private List<Long> parcelIds;
 
+    @Override
     public String getHeaders() {
         return "departmentId, location, workingHours, parcelIds";
     }
 
+    @Override
     public String toCSV() {
         return departmentId + ", " + location + ", " + workingHours + ", " + parcelIds;
     }

@@ -15,18 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @SuppressFBWarnings
-public class Courier {
+public class Courier extends Item {
     private Long courierId;
     private Long departmentId;
     private String fullName;
     private boolean isWorking;
     private List<Long> parcelIds;
 
+    @Override
     public String getHeaders() {
         return "courierId, departmentId, fullName, "
                 + "isWorking, parcelIds";
     }
 
+    @Override
     public String toCSV() {
         return courierId + ", " + departmentId + ", " + fullName + ", "
                 + isWorking + ", " + parcelIds;

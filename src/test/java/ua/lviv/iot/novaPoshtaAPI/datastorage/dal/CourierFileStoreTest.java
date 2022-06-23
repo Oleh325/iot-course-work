@@ -54,8 +54,8 @@ class CourierFileStoreTest {
 
     @Test
     void SaveAndLoadCouriers() throws IOException, ParseException {
-        courierFileStore.saveCouriers(map, "res\\test\\");
-        HashMap<Long, Courier> resultMap = courierFileStore.loadCouriers("res\\test\\");
+        courierFileStore.save(map, "res\\test\\");
+        HashMap<Long, Courier> resultMap = courierFileStore.load("res\\test\\");
         String expected = "[Courier(courierId=1, departmentId=1, fullName=Pavelchak Andrii, " +
                 "isWorking=false, parcelIds=[1, 2, 3]), " +
                 "Courier(courierId=2, departmentId=1, fullName=Veres Zenovii, " +
