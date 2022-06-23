@@ -36,13 +36,14 @@ public class DepartmentService {
         return this.departments.get(departmentId);
     }
 
-    public void addDepartment(Department department) {
+    public void addDepartment(Department department) throws IOException {
         List<Long> parcelIds = new LinkedList<>();
         department.setParcelIds(parcelIds);
         this.departments.put(department.getDepartmentId(), department);
+        saveDepartments();
     }
 
-    public void updateDepartment(Department department, Long departmentId) {
+    public void updateDepartment(Department department, Long departmentId) throws IOException {
         if (this.departments.get(departmentId) != null) {
             if (department.getDepartmentId() == null) {
                 department.setDepartmentId(departmentId);
@@ -57,10 +58,11 @@ public class DepartmentService {
                 department.setParcelIds(this.departments.get(departmentId).getParcelIds());
             }
             this.departments.put(departmentId, department);
+            saveDepartments();
         }
     }
 
-    public void deleteDepartment(Long departmentId) {
+    public void deleteDepartment(Long departmentId) throws IOException {
         for (Long parcelId: this.departments.get(departmentId).getParcelIds()) {
             parcelService.deleteParcel(parcelId);
         }
@@ -70,9 +72,10 @@ public class DepartmentService {
             }
         }
         this.departments.remove(departmentId);
+        saveDepartments();
     }
 
-    public void giveParcelToCourier(Long departmentId, Long courierId, Long parcelId) {
+    public void giveParcelToCourier(Long departmentId, Long courierId, Long parcelId) throws IOException {
         if (departments.get(departmentId).getParcelIds().contains(parcelId)
                 && Objects.equals(courierService.getCourierById(courierId).getDepartmentId(), departmentId)) {
             List<Long> newIdsDpt = departments.get(departmentId).getParcelIds();
@@ -87,26 +90,32 @@ public class DepartmentService {
             newParcel.setLocation("Courier is delivering the parcel");
             parcelService.deleteParcel(parcelId);
             parcelService.addParcel(newParcel);
+            parcelService.saveParcels();
+            courierService.saveCouriers();
+            saveDepartments();
         }
     }
 
-    public void addParcel(Long departmentId, Parcel parcel) {
+    public void addParcel(Long departmentId, Parcel parcel) throws IOException {
         List<Long> newIds = this.departments.get(departmentId).getParcelIds();
         newIds.add(parcel.getParcelId());
         this.departments.get(departmentId).setParcelIds(newIds);
         parcel.setLocation(this.departments.get(departmentId).getLocation());
         parcelService.addParcel(parcel);
+        parcelService.saveParcels();
     }
 
-    public void updateParcel(Long departmentId, Parcel parcel, Long parcelId) {
+    public void updateParcel(Long departmentId, Parcel parcel, Long parcelId) throws IOException {
         if (this.departments.get(departmentId).getParcelIds().contains(parcel.getParcelId())) {
             parcelService.updateParcel(parcel, parcelId);
+            parcelService.saveParcels();
         }
     }
 
-    public void deleteParcel(Long departmentId, Long parcelId) {
+    public void deleteParcel(Long departmentId, Long parcelId) throws IOException {
         if (this.departments.get(departmentId).getParcelIds().contains(parcelId)) {
             parcelService.deleteParcel(parcelId);
+            parcelService.saveParcels();
         }
     }
 
@@ -134,7 +143,7 @@ public class DepartmentService {
         return result;
     }
 
-    public void deliverParcel(Long departmentIdFrom, Long departmentIdTo, Long parcelId) {
+    public void deliverParcel(Long departmentIdFrom, Long departmentIdTo, Long parcelId) throws IOException {
         if (departments.get(departmentIdFrom).getParcelIds().contains(parcelId)) {
             List<Long> newIdsFrom = departments.get(departmentIdFrom).getParcelIds();
             newIdsFrom.remove(parcelId);
@@ -146,26 +155,31 @@ public class DepartmentService {
             newParcel.setLocation(departments.get(departmentIdTo).getLocation());
             parcelService.deleteParcel(parcelId);
             parcelService.addParcel(newParcel);
+            parcelService.saveParcels();
+            saveDepartments();
         }
     }
 
-    public void addCourier(Long departmentId, Courier courier) {
+    public void addCourier(Long departmentId, Courier courier) throws IOException {
         if (this.departments.get(departmentId) != null) {
             courier.setDepartmentId(departmentId);
             courierService.addCourier(courier);
+            courierService.saveCouriers();
         }
     }
 
-    public void updateCourier(Long departmentId, Courier courier, Long courierId) {
+    public void updateCourier(Long departmentId, Courier courier, Long courierId) throws IOException {
         if (this.departments.get(departmentId) != null) {
             courier.setDepartmentId(departmentId);
             courierService.updateCourier(courier, courierId);
+            courierService.saveCouriers();
         }
     }
 
-    public void deleteCourier(Long departmentId, Long courierId) {
+    public void deleteCourier(Long departmentId, Long courierId) throws IOException {
         if (this.departments.get(departmentId) != null) {
             courierService.deleteCourier(courierId);
+            courierService.saveCouriers();
         }
     }
 
@@ -194,12 +208,12 @@ public class DepartmentService {
     }
 
     @PreDestroy
-    private void saveDepartments() throws IOException {
+    public void saveDepartments() throws IOException {
         departmentFileStore.save(this.departments, "res\\");
     }
 
     @PostConstruct
-    private void loadDepartments() throws IOException, ParseException {
+    public void loadDepartments() throws IOException, ParseException {
         if (departmentFileStore.load("res\\") != null) {
             this.departments = departmentFileStore.load("res\\");
         }

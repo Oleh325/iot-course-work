@@ -13,6 +13,7 @@ import ua.lviv.iot.novaPoshtaAPI.model.Courier;
 import ua.lviv.iot.novaPoshtaAPI.service.CourierService;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -35,18 +36,20 @@ public class CourierController {
     }
 
     @PostMapping("/departments/{departmentId}/couriers")
-    public void addCourier(@PathVariable Long departmentId, @RequestBody Courier courier) {
+    public void addCourier(@PathVariable Long departmentId,
+                           @RequestBody Courier courier) throws IOException {
         departmentService.addCourier(departmentId, courier);
     }
 
     @PutMapping("/departments/{departmentId}/couriers/{courierId}")
     public void updateCourier(@PathVariable Long departmentId, @RequestBody Courier courier,
-                              @PathVariable Long courierId) {
+                              @PathVariable Long courierId) throws IOException {
         departmentService.updateCourier(departmentId, courier, courierId);
     }
 
     @DeleteMapping("/departments/{departmentId}/couriers/{courierId}")
-    public void deleteCourier(@PathVariable Long departmentId, @PathVariable Long courierId) {
+    public void deleteCourier(@PathVariable Long departmentId,
+                              @PathVariable Long courierId) throws IOException {
         departmentService.deleteCourier(departmentId, courierId);
     }
 

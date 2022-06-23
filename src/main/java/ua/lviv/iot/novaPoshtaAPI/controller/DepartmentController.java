@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,17 +33,18 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public void addDepartment(@RequestBody Department department) {
+    public void addDepartment(@RequestBody Department department) throws IOException {
         departmentService.addDepartment(department);
     }
 
     @PutMapping("/{departmentId}")
-    public void updateDepartment(@RequestBody Department department, @PathVariable Long departmentId) {
+    public void updateDepartment(@RequestBody Department department,
+                                 @PathVariable Long departmentId) throws IOException {
         departmentService.updateDepartment(department, departmentId);
     }
 
     @DeleteMapping("/{departmentId}")
-    public void deleteDepartment(@PathVariable Long departmentId) {
+    public void deleteDepartment(@PathVariable Long departmentId) throws IOException {
         departmentService.deleteDepartment(departmentId);
     }
 

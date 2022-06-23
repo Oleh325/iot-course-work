@@ -14,6 +14,7 @@ import ua.lviv.iot.novaPoshtaAPI.service.CourierService;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 import ua.lviv.iot.novaPoshtaAPI.service.ParcelService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -48,35 +49,38 @@ public class ParcelController {
     }
 
     @PostMapping("/departments/{departmentId}/parcels")
-    public void addParcel(@PathVariable Long departmentId, @RequestBody Parcel parcel) {
+    public void addParcel(@PathVariable Long departmentId,
+                          @RequestBody Parcel parcel) throws IOException {
         departmentService.addParcel(departmentId, parcel);
     }
 
     @PutMapping("/departments/{departmentId}/parcels/{parcelId}")
     public void updateParcel(@PathVariable Long departmentId, @PathVariable Long parcelId,
-                             @RequestBody Parcel parcel) {
+                             @RequestBody Parcel parcel) throws IOException {
         departmentService.updateParcel(departmentId, parcel, parcelId);
     }
 
     @DeleteMapping("/departments/{departmentId}/parcels/{parcelId}")
-    public void deleteParcel(@PathVariable Long departmentId, @PathVariable Long parcelId) {
+    public void deleteParcel(@PathVariable Long departmentId,
+                             @PathVariable Long parcelId) throws IOException {
         departmentService.deleteParcel(departmentId, parcelId);
     }
 
     @RequestMapping("/departments/{departmentId}/couriers/{courierId}/parcels/{parcelId}")
     public void giveParcelToCourier(@PathVariable Long departmentId, @PathVariable Long courierId,
-                                    @PathVariable Long parcelId) {
+                                    @PathVariable Long parcelId) throws IOException {
         departmentService.giveParcelToCourier(departmentId, courierId, parcelId);
     }
 
     @RequestMapping("/departments/{departmentIdFrom}/deliver/{departmentIdTo}/parcels/{parcelId}")
     public void deliverParcelDepartment(@PathVariable Long departmentIdFrom, @PathVariable Long departmentIdTo,
-                              @PathVariable Long parcelId) {
+                              @PathVariable Long parcelId) throws IOException {
         departmentService.deliverParcel(departmentIdFrom, departmentIdTo, parcelId);
     }
 
     @RequestMapping("/couriers/{courierId}/deliver/{parcelId}")
-    public void deliverParcelCourier(@PathVariable Long courierId, @PathVariable Long parcelId) {
+    public void deliverParcelCourier(@PathVariable Long courierId,
+                                     @PathVariable Long parcelId) throws IOException {
         courierService.deliverParcel(courierId, parcelId);
     }
 

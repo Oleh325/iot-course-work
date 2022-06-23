@@ -31,12 +31,14 @@ public class CourierService {
         return couriers.get(courierId);
     }
 
-    public void deliverParcel(Long courierId, Long parcelId) {
+    public void deliverParcel(Long courierId, Long parcelId) throws IOException {
         if (this.couriers.get(courierId).getParcelIds().contains(parcelId)) {
             parcelService.deleteParcel(parcelId);
             List<Long> newIds = this.couriers.get(courierId).getParcelIds();
             newIds.remove(parcelId);
             this.couriers.get(courierId).setParcelIds(newIds);
+            parcelService.saveParcels();
+            saveCouriers();
         }
     }
 
@@ -73,12 +75,12 @@ public class CourierService {
 
 
     @PreDestroy
-    private void saveCouriers() throws IOException {
+    public void saveCouriers() throws IOException {
         courierFileStore.save(this.couriers, "res\\");
     }
 
     @PostConstruct
-    private void loadCouriers() throws IOException, ParseException {
+    public void loadCouriers() throws IOException, ParseException {
         if (courierFileStore.load("res\\") != null) {
             this.couriers = courierFileStore.load("res\\");
         }
