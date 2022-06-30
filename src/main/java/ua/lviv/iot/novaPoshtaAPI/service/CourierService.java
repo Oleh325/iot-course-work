@@ -49,21 +49,7 @@ public class CourierService {
     }
 
     public void updateCourier(Courier courier, Long courierId) {
-        if (this.couriers.get(courierId) != null) {
-            if (courier.getCourierId() == null) {
-                courier.setCourierId(courierId);
-            }
-            if (courier.getDepartmentId() == null) {
-                courier.setDepartmentId(this.couriers.get(courierId).getDepartmentId());
-            }
-            if (courier.getFullName() == null) {
-                courier.setFullName(this.couriers.get(courierId).getFullName());
-            }
-            if (courier.getParcelIds() == null) {
-                courier.setParcelIds(this.couriers.get(courierId).getParcelIds());
-            }
-            this.couriers.put(courierId, courier);
-        }
+        this.couriers.put(courierId, courier);
     }
 
     public void deleteCourier(Long courierId) {

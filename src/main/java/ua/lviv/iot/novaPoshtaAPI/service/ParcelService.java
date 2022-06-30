@@ -34,36 +34,7 @@ public class ParcelService {
     }
 
     public void updateParcel(Parcel parcel, Long parcelId) {
-        if (this.parcels.get(parcelId) != null) {
-            if (parcel.getParcelId() == null) {
-                parcel.setParcelId(parcelId);
-            }
-            if (parcel.getWeightInKgs() == 0.0f) {
-                parcel.setWeightInKgs(this.parcels.get(parcelId).getWeightInKgs());
-            }
-            if (parcel.getHeightInCm() == 0.0f) {
-                parcel.setHeightInCm(this.parcels.get(parcelId).getHeightInCm());
-            }
-            if (parcel.getWidthInCm() == 0.0f) {
-                parcel.setWidthInCm(this.parcels.get(parcelId).getWidthInCm());
-            }
-            if (parcel.getLengthInCm() == 0.0f) {
-                parcel.setLengthInCm(this.parcels.get(parcelId).getLengthInCm());
-            }
-            if (parcel.getOrigin() == null) {
-                parcel.setOrigin(this.parcels.get(parcelId).getOrigin());
-            }
-            if (parcel.getDestination() == null) {
-                parcel.setDestination(this.parcels.get(parcelId).getDestination());
-            }
-            if (parcel.getLocation() == null) {
-                parcel.setLocation(this.parcels.get(parcelId).getLocation());
-            }
-            if (parcel.getDateSent() == null) {
-                parcel.setDateSent(this.parcels.get(parcelId).getDateSent());
-            }
-            this.parcels.put(parcelId, parcel);
-        }
+        this.parcels.put(parcelId, parcel);
     }
 
     public void deleteParcel(Long parcelId) {

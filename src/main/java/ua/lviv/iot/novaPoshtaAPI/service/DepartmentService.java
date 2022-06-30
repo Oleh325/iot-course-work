@@ -44,22 +44,8 @@ public class DepartmentService {
     }
 
     public void updateDepartment(Department department, Long departmentId) throws IOException {
-        if (this.departments.get(departmentId) != null) {
-            if (department.getDepartmentId() == null) {
-                department.setDepartmentId(departmentId);
-            }
-            if (department.getLocation() == null) {
-                department.setLocation(this.departments.get(departmentId).getLocation());
-            }
-            if (department.getWorkingHours() == null) {
-                department.setWorkingHours(this.departments.get(departmentId).getWorkingHours());
-            }
-            if (department.getParcelIds() == null) {
-                department.setParcelIds(this.departments.get(departmentId).getParcelIds());
-            }
-            this.departments.put(departmentId, department);
-            saveDepartments();
-        }
+        this.departments.put(departmentId, department);
+        saveDepartments();
     }
 
     public void deleteDepartment(Long departmentId) throws IOException {

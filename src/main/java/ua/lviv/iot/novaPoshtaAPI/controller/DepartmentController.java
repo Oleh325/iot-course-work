@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import ua.lviv.iot.novaPoshtaAPI.model.Department;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,12 +34,12 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public void addDepartment(@RequestBody Department department) throws IOException {
+    public void addDepartment(@RequestBody @Valid Department department) throws IOException {
         departmentService.addDepartment(department);
     }
 
     @PutMapping("/{departmentId}")
-    public void updateDepartment(@RequestBody Department department,
+    public void updateDepartment(@RequestBody @Valid Department department,
                                  @PathVariable Long departmentId) throws IOException {
         departmentService.updateDepartment(department, departmentId);
     }

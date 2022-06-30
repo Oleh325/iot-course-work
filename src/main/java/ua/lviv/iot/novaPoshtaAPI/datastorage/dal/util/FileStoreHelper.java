@@ -1,6 +1,7 @@
 package ua.lviv.iot.novaPoshtaAPI.datastorage.dal.util;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public final class FileStoreHelper {
         File file = generateFile(directoryPath, objectPrefix);
 
         File directory = new File(directoryPath);
-        if (directory.length() != 0) {
+        if (FileUtils.sizeOfDirectory(directory) != 0) {
             file = findFile(directoryPath, objectPrefix);
         }
 
@@ -57,15 +58,14 @@ public final class FileStoreHelper {
 
         for (LocalDate date = LocalDate.now(); date.isAfter(formatter.parse("1970-01-01").toInstant()
                 .atZone(ZoneId.systemDefault()).toLocalDate()); date = date.minusDays(1)) {
+
             DateTimeFormatter pathFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String datePath = date.format(pathFormatter);
-
             if (Files.exists(Paths.get(directoryPath + objectPrefix + "-" + datePath + ".csv"))) {
                 file = new File(directoryPath + objectPrefix + "-" + datePath + ".csv");
                 break;
             }
         }
-
         return file;
     }
 
@@ -124,7 +124,6 @@ public final class FileStoreHelper {
                 values.add(value);
             }
         }
-        listValue = "";
         return values;
     }
 

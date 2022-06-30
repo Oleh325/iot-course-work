@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,9 @@ import java.util.List;
 @ToString
 @SuppressFBWarnings
 public class Department extends Item {
+    @NotNull(message = "Department ID shouldn't be null!")
     private Long departmentId;
+    @NotNull(message = "Department's location shouldn't be null!")
     private String location;
     private String workingHours;
     private List<Long> parcelIds;

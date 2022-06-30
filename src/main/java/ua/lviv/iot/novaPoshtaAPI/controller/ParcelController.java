@@ -14,6 +14,7 @@ import ua.lviv.iot.novaPoshtaAPI.service.CourierService;
 import ua.lviv.iot.novaPoshtaAPI.service.DepartmentService;
 import ua.lviv.iot.novaPoshtaAPI.service.ParcelService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -50,13 +51,13 @@ public class ParcelController {
 
     @PostMapping("/departments/{departmentId}/parcels")
     public void addParcel(@PathVariable Long departmentId,
-                          @RequestBody Parcel parcel) throws IOException {
+                          @RequestBody @Valid Parcel parcel) throws IOException {
         departmentService.addParcel(departmentId, parcel);
     }
 
     @PutMapping("/departments/{departmentId}/parcels/{parcelId}")
     public void updateParcel(@PathVariable Long departmentId, @PathVariable Long parcelId,
-                             @RequestBody Parcel parcel) throws IOException {
+                             @RequestBody @Valid Parcel parcel) throws IOException {
         departmentService.updateParcel(departmentId, parcel, parcelId);
     }
 

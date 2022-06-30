@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -16,8 +17,11 @@ import java.util.List;
 @ToString
 @SuppressFBWarnings
 public class Courier extends Item {
+    @NotNull(message = "Courier ID shouldn't be null!")
     private Long courierId;
+    @NotNull(message = "Courier's department ID shouldn't be null!")
     private Long departmentId;
+    @NotNull(message = "Courier's full name shouldn't be null!")
     private String fullName;
     private boolean isWorking;
     private List<Long> parcelIds;
